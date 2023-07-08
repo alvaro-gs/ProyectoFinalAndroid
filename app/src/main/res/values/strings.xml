@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">ProyectoFinal</string>
+    <!-- Inicio de sesión/Registro -->
+    <string name="iniciar">Iniciar sesión</string>
+    <string name="registrar">¿No tienes cuenta? Registrate aquí</string>
+    <string name="catalogo">Ver catálogo</string>
+    <string name="datos">%1s : %2s</string>
+    <string name="male">Masculino</string>
+    <string name="female">Femenino</string>
+    <string name="other">Otro</string>
+    <string name="error">Favor de llenar el campo</string>
+    <string name="noSex">Favor de seleccionar el sexo</string>
+    <string name="bienvenida" > Bienvenido %1s, %2s</string>
+    <string name="bienvenidaInicio">¡Bienvenido!</string>
+    <string name="datosInicio">Por favor, ingresa tus datos</string>
+
+
+</resources>
