@@ -1,9 +1,10 @@
-package com.ags.proyectofinal
+package com.ags.proyectofinal.ui
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import com.ags.proyectofinal.R
 import com.ags.proyectofinal.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
@@ -48,7 +49,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
         binding.btCatalogo.setOnClickListener {
-            val intent = Intent(requireContext(),CatalogoActivity::class.java).apply {
+            val intent = Intent(requireContext(), CatalogoActivity::class.java).apply {
                 putExtra("KEY_INFO","Invitado")
             }
             startActivity(intent)

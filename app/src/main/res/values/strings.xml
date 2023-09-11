@@ -9,10 +9,58 @@
     <string name="female">Femenino</string>
     <string name="other">Otro</string>
     <string name="error">Favor de llenar el campo</string>
+    <string name="errorRadioButton">Favor de seleccionar una de las opciones</string>
+    <string name="errorMessage">Favor de llenar los campos indicados</string>
     <string name="noSex">Favor de seleccionar el sexo</string>
-    <string name="bienvenida" > Bienvenido %1s, %2s</string>
+    <string name="bienvenida"> Bienvenido %1s, %2s</string>
     <string name="bienvenidaInicio">¡Bienvenido!</string>
     <string name="datosInicio">Por favor, ingresa tus datos</string>
+    <string name="regresar">Regresar</string>
+
+    <!--Pedidos-->
+    <string name="finalizar">Finalizar y Guardar</string>
+    <string name="inicioPedido">Nuevo pedido</string>
+    <string name="actualizarPedido">Actualizar pedido</string>
+    <string name="detallePedido">Detalle del pedido</string>
+    <string name="detalleEntrega">Detalle de entrega</string>
+    <string name="listaPedidos">Mis pedidos</string>
+    <string name="sucursal">En sucursal</string>
+    <string name="domicilio">A domicilio</string>
+    <string name="pago">Método de pago</string>
+    <string name="totalPago">Total a pagar: </string>
+    <string name="entrega">Entrega</string>
+    <string name="entregaEn">Entrega en: </string>
+    <string name="producto">Producto</string>
+    <string name="pedidoTexto">Pedido </string>
+    <string name="domicilioEntrega">Por favor, ingrese los datos del domicilio de entrega</string>
+    <string name="domicilioEntregaEditar">Puedes editar los datos que proporcionaste anteriormente</string>
+    <string name="calleNumero">Calle y número</string>
+    <string name="colonia">Colonia</string>
+    <string name="codigoP">Código postal</string>
+    <string name="observacionesDireccion">Observaciones adicionales</string>
+    <string name="notasAdicionales"> Notas adicionales: </string>
+    <string name="entregaSucursal">Entrega en sucursal</string>
+    <string name="estatus">Estatus</string>
+    <string name="pagoRestante">Pago restante</string>
+    <string name="calle">Calle</string>
+    <string name="pedido">Mis pedidos</string>
+    <string name="estatus0">Recibido</string>
+    <string name="estatus1">En proceso</string>
+    <string name="estatus2">Enviado</string>
+    <string name="estatus3">Entregado</string>
+    <string name="estatus4">Finalizado</string>
+    <string name="estatus5">Cancelado</string>
+    <string name="coma">, </string>
+    <string name="noRegistros">Sin registros por mostrar</string>
+
+
+    <!--Catálogo-->
+
+    <string name="detalleProducto">Detalle del producto</string>
+    <string name="tipo">Tipo de producto</string>
+    <string name="presentaciones">Presentaciones del producto</string>
+    <string name="ordenar">Ordenar</string>
+
 
 
 </resources>

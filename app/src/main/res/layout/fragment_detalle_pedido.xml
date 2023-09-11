@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.DetallePedidoFragment">
+
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:text="@string/detallePedido"
+        android:background="@color/morado1"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:paddingVertical="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/ivProduct"
+        android:src="@drawable/ic_image"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"/>
+
+    <TextView
+        android:id="@+id/tvDetailTitle"
+        android:text="@string/detalleEntrega"
+        style="@style/NormalText"
+        app:layout_constraintTop_toBottomOf="@id/ivProduct"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvDetail"
+        android:background="@drawable/bordes_tv"
+        android:text="TextoDetalle"
+        app:layout_constraintTop_toBottomOf="@id/tvDetailTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tvEstatusTitle"
+        android:text="@string/estatus"
+        style="@style/NormalText"
+        app:layout_constraintTop_toBottomOf="@id/tvDetail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvEstatus"
+        android:background="@drawable/bordes_tv"
+        android:text="TextoEstatus"
+        app:layout_constraintTop_toBottomOf="@id/tvEstatusTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tvPayTitle"
+        android:text="@string/pagoRestante"
+        style="@style/NormalText"
+        app:layout_constraintTop_toBottomOf="@id/tvEstatus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tvPay"
+        android:background="@drawable/bordes_tv"
+        android:text="TextoPago"
+        app:layout_constraintTop_toBottomOf="@id/tvPayTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btReturn"
+        android:text="@string/regresar"
+        app:layout_constraintTop_toBottomOf="@id/tvPay"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

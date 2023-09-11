@@ -1,10 +1,11 @@
-package com.ags.proyectofinal
+package com.ags.proyectofinal.ui
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Toast
+import com.ags.proyectofinal.R
 import com.ags.proyectofinal.databinding.FragmentRegisterBinding
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {

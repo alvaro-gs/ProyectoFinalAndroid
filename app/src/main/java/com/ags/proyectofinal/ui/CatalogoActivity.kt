@@ -1,8 +1,10 @@
-package com.ags.proyectofinal
+package com.ags.proyectofinal.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import com.ags.proyectofinal.R
 import com.ags.proyectofinal.databinding.ActivityCatalogoBinding
 
 class CatalogoActivity : AppCompatActivity() {
@@ -38,6 +40,12 @@ class CatalogoActivity : AppCompatActivity() {
             binding.tvSex.visibility = View.GONE
             binding.tvEmail.visibility = View.GONE
             binding.tvPassword.visibility = View.GONE
+        }
+
+        binding.btMisPedidos.setOnClickListener {
+            val intent = Intent(this, PedidoActivity::class.java)
+            startActivity(intent)
+
         }
 
 

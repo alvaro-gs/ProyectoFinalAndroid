@@ -11,4 +11,6 @@
         <item name = "android:textSize">15dp</item>
         <item name = "fontFamily">@font/archivo</item>
     </style>
+
+
 </resources>

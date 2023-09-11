@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/glStart"
@@ -33,7 +33,7 @@
        app:layout_constraintTop_toTopOf="parent"
        app:layout_constraintStart_toStartOf="@id/glStart"
        app:layout_constraintEnd_toEndOf="@id/glEnd"
-       android:name="com.ags.proyectofinal.LoginFragment"
+       android:name="com.ags.proyectofinal.ui.LoginFragment"
        android:layout_width="0dp"
        android:layout_height="wrap_content"/>
 
