@@ -36,7 +36,7 @@ class DetallePedidoFragment(
         var status = ""
         if(pedido.postalCode != -1){
 
-            detail = getString(R.string.entregaEn) + " " + pedido.street +  getString(R.string.coma) + " " + pedido.suburb + " " + getString(R.string.coma) + pedido.postalCode.toString() + " " + getString(R.string.notasAdicionales) + " " + pedido.notes
+            detail = getString(R.string.entregaEn) + " " + pedido.street +  getString(R.string.coma) + " " + pedido.suburb + getString(R.string.coma) + " " + getString(R.string.codigoPostal) + " " + pedido.postalCode.toString() + " " + getString(R.string.notasAdicionales) + " " + pedido.notes
 
         }
         else{

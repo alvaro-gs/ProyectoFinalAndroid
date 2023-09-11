@@ -52,6 +52,8 @@
     <string name="estatus5">Cancelado</string>
     <string name="coma">, </string>
     <string name="noRegistros">Sin registros por mostrar</string>
+    <string name="codigoPostal">Codigo postal: </string>
+
 
 
     <!--Catálogo-->
