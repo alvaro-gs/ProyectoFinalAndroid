@@ -55,14 +55,19 @@
     <string name="codigoPostal">Codigo postal: </string>
 
 
-
     <!--Catálogo-->
 
     <string name="detalleProducto">Detalle del producto</string>
     <string name="tipo">Tipo de producto</string>
-    <string name="presentaciones">Presentaciones del producto</string>
+    <string name="presentaciones">Presentaciones y precio del producto</string>
     <string name="ordenar">Ordenar</string>
-
-
+    <string name="descripción">Descripción</string>
+    <string name="presentacionesConPrecio">%1s : $%2s</string>
+    <string name="categoria1">Pasteles/Roscas</string>
+    <string name="categoria2">Panques</string>
+    <string name="categoria3">Muffins/Cupcakes</string>
+    <string name="categoria4">Galletas</string>
+    <string name="categoria5">Otros</string>
+    <string name="errorConexion">Error de conexión</string>
 
 </resources>

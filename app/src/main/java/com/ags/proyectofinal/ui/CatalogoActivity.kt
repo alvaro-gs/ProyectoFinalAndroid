@@ -3,18 +3,37 @@ package com.ags.proyectofinal.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.ags.proyectofinal.R
+import com.ags.proyectofinal.application.ProyectoFinalApp
+import com.ags.proyectofinal.data.remote.ProductoRepository
+import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.ActivityCatalogoBinding
+import com.ags.proyectofinal.util.Constants
+import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class CatalogoActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCatalogoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityCatalogoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val bundle = intent.getBundleExtra("EXTRA_BUNDLE")
+        if (savedInstanceState == null){
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fgContainerView, ListaProductosFragment())
+                .commit()
+        }
+
+        /*val bundle = intent.getBundleExtra("EXTRA_BUNDLE")
         val type = intent.getStringExtra("KEY_INFO")
 
         if (type == "Login"){
@@ -40,7 +59,10 @@ class CatalogoActivity : AppCompatActivity() {
             binding.tvSex.visibility = View.GONE
             binding.tvEmail.visibility = View.GONE
             binding.tvPassword.visibility = View.GONE
-        }
+        }*/
+
+
+
 
         binding.btMisPedidos.setOnClickListener {
             val intent = Intent(this, PedidoActivity::class.java)

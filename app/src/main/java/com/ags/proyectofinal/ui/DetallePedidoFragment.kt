@@ -129,12 +129,14 @@ class DetallePedidoFragment(
         binding.btReturn.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fgContainerView, ListaPedidosFragment.newInstance())
-                .addToBackStack("ListaPedidosFragment")
                 .commit()
         }
     }
 
-
+    override fun onDestroy(){
+        super.onDestroy()
+        _binding = null
+    }
     companion object {
         fun newInstance(pedido: PedidoEntity,updateUI: () -> Unit) = DetallePedidoFragment(pedido,updateUI)
     }

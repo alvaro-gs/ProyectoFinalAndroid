@@ -204,7 +204,6 @@ class EditarPedidoFragment(
 
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.fgContainerView, ListaPedidosFragment.newInstance())
-                        .addToBackStack("ListaPedidosFragment")
                         .commit()
 
                 } else {
@@ -246,6 +245,10 @@ class EditarPedidoFragment(
             }
             Toast.makeText(requireContext(),getString(R.string.errorMessage) , Toast.LENGTH_LONG).show()
         }
+    }
+    override fun onDestroy(){
+        super.onDestroy()
+        _binding = null
     }
     companion object {
 

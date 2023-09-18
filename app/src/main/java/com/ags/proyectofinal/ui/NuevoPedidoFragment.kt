@@ -176,7 +176,6 @@ class NuevoPedidoFragment (
 
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.fgContainerView, ListaPedidosFragment.newInstance())
-                        .addToBackStack("ListaPedidosFragment")
                         .commit()
 
                 }
@@ -226,6 +225,11 @@ class NuevoPedidoFragment (
             }
             Toast.makeText(requireContext(),getString(R.string.errorMessage) , Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onDestroy(){
+        super.onDestroy()
+        _binding = null
     }
     companion object {
         fun newInstance(updateUI: () -> Unit) = NuevoPedidoFragment(updateUI)
