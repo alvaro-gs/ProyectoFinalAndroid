@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.CatalogoActivity">
+    tools:context=".ui.UsuarioActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/gl"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.85"
+        app:layout_constraintGuide_percent="0.87"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
@@ -19,17 +19,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/gl"
+        android:name="com.ags.proyectofinal.ui.ListaPedidosFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
-    <Button
-        android:id="@+id/btMisPedidos"
-        android:text="@string/pedido"
-        app:layout_constraintTop_toBottomOf="@id/gl"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintTop_toBottomOf="@id/fgContainerView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,5 +21,19 @@
         android:indeterminateDuration="1500"
         />
 
+    <Button
+        android:id="@+id/btReload"
+        android:text="@string/recargar"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tvError"
+        android:text="@string/errorConexion"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </FrameLayout>

@@ -4,20 +4,21 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.ags.proyectofinal.R
-import com.ags.proyectofinal.databinding.ActivityPedidoBinding
+import com.ags.proyectofinal.databinding.ActivityUsuarioBinding
 
-class PedidoActivity : AppCompatActivity() {
+class UsuarioActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityPedidoBinding
-
+    private lateinit var binding: ActivityUsuarioBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityPedidoBinding.inflate(layoutInflater)
+
+        binding = ActivityUsuarioBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
 
         if (savedInstanceState == null){
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fgContainerView, ListaPedidosFragment())
+                .replace(R.id.fgContainerView, ConfiguracionFragment())
                 .commit()
         }
 
@@ -28,6 +29,5 @@ class PedidoActivity : AppCompatActivity() {
 
             }
         }
-
     }
 }

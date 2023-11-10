@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".application.ProyectoFinalApp"
         android:allowBackup="true"
@@ -15,13 +16,16 @@
         android:theme="@style/Theme.ProyectoFinal"
         tools:targetApi="31">
         <activity
+            android:name=".ui.UsuarioActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.PedidoActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.CatalogoActivity"
+            android:name=".ui.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>

@@ -46,8 +46,25 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:id="@+id/tvDelivery"
+                android:id="@+id/tvPresentations"
                 app:layout_constraintTop_toBottomOf="@id/etProduct"
+                app:layout_constraintStart_toStartOf="parent"
+                style="@style/NormalText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/presentaciones"/>
+
+            <Spinner
+                android:id="@+id/etPresentation"
+                app:layout_constraintTop_toBottomOf="@id/tvPresentations"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/tvDelivery"
+                app:layout_constraintTop_toBottomOf="@id/etPresentation"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="20dp"
                 android:text="@string/entrega"

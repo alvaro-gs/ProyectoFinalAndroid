@@ -1,6 +1,7 @@
 package com.ags.proyectofinal.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,13 +11,24 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ags.proyectofinal.R
 import com.ags.proyectofinal.application.ProyectoFinalApp
 import com.ags.proyectofinal.data.db.PedidoRepository
 import com.ags.proyectofinal.data.db.model.PedidoEntity
+import com.ags.proyectofinal.data.remote.ProductoRepository
+import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.FragmentNuevoPedidoBinding
+import com.ags.proyectofinal.util.Constants
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
+import java.util.ArrayList
 
 
 class NuevoPedidoFragment (
@@ -25,10 +37,15 @@ class NuevoPedidoFragment (
 
     private var _binding: FragmentNuevoPedidoBinding ? = null
     private val binding get() = _binding!!
-
+    private lateinit var firebaseAuth: FirebaseAuth
+    private var user: FirebaseUser? = null
+    private var userId = ""
     private lateinit var repository: PedidoRepository
+    private lateinit var productoRepository: ProductoRepository
     private var itemSelected : Long = 0
-
+    private var listaProductos: List<ProductoDto> = emptyList()
+    private var listaNombresProductos: MutableList<String> = emptyList<String>().toMutableList()
+    private var listaProductosAux: MutableList<Int> = emptyList<Int>().toMutableList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +59,44 @@ class NuevoPedidoFragment (
         super.onViewCreated(view, savedInstanceState)
 
         repository = (requireContext().applicationContext as ProyectoFinalApp).repository
+        productoRepository = (requireContext().applicationContext as ProyectoFinalApp).productoRepository
+        firebaseAuth = FirebaseAuth.getInstance()
+        user = firebaseAuth.currentUser
+        if (user!= null){
+            userId = user!!.uid
+        }
+
+
+        lifecycleScope.launch {
+            val call: Call<List<ProductoDto>> = productoRepository.getCatalogoProductosApiary()
+
+            call.enqueue(object: Callback<List<ProductoDto>> {
+                override fun onResponse(
+                    call: Call<List<ProductoDto>>,
+                    response: Response<List<ProductoDto>>
+                ) {
+                    //binding.pbLoading.visibility = View.GONE
+                    Log.d(Constants.LOGTAG, "Respuesta del servidor ${response.body()}")
+                    response.body()?.let {productos ->
+                        listaProductos = productos
+                        listaNombresProductos.add("Ninguno Seleccionado")
+                        for (i in productos.indices){
+                            listaNombresProductos.add(listaProductos[i].name.toString())
+                        }
+
+                    }
+                }
+
+                override fun onFailure(call: Call<List<ProductoDto>>, t: Throwable) {
+                    //Manejo del error
+                   ///binding.pbLoading.visibility = View.GONE
+                    Log.d(Constants.LOGTAG,"Error: ${t.message}")
+                    Toast.makeText(requireContext(), getString(R.string.errorConexion), Toast.LENGTH_LONG).show()
+                }
+
+            })
+
+        }
 
         binding.apply {
 
@@ -89,12 +144,23 @@ class NuevoPedidoFragment (
 
             }
 
-            var listaProductos = arrayListOf(0,1,2,3,4,5,6,7,8)
-            var adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,listaProductos)
-
+            listaProductosAux.add(0)
+            listaProductosAux.add(1)
+            listaProductosAux.add(2)
+            listaProductosAux.add(3)
+            listaProductosAux.add(4)
+            listaProductosAux.add(5)
+            listaProductosAux.add(6)
+            listaProductosAux.add(7)
+            listaProductosAux.add(8)
+            //var adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,listaNombresProductos)
+            var adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,listaProductosAux)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             etProduct.adapter = adapter
 
+            // konecta , paypal (pasarelas de pago)
+
+            etProduct.setSelection(0)
             etProduct.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -102,7 +168,9 @@ class NuevoPedidoFragment (
                     position: Int,
                     id: Long
                 ) {
-                    itemSelected = listaProductos[position].toLong()
+                    //itemSelected = listaNombresProductos[position].toLong()
+                    itemSelected = listaProductosAux[position].toLong()
+                    Toast.makeText(requireContext(), itemSelected.toString(), Toast.LENGTH_SHORT).show()
 
                 }
 
@@ -115,7 +183,7 @@ class NuevoPedidoFragment (
             btSend.setOnClickListener {
                 if (validateFields()){
                     var name = getString(R.string.pedidoTexto) + itemSelected.toString()
-                    var userId : Long = 0
+
                     var status: Short = 0
                     var street = ""
                     var suburb = ""
@@ -123,7 +191,7 @@ class NuevoPedidoFragment (
                     var postalCode = -1
                     var notes = ""
                     var remainingPayment = 100.00
-                    var imageURL = ""
+                    var imageURL = listaProductos[itemSelected.toInt()].imageURL
 
                     if(rgDelivery.checkedRadioButtonId == R.id.rbDomicilio){
 
@@ -134,36 +202,9 @@ class NuevoPedidoFragment (
                         notes = etNotes.text.toString()
 
                     }
-                    // Actualizar imagen
 
-                    when(itemSelected){
-                        1.toLong()->{
-                            imageURL = "https://drive.google.com/file/d/12N4v33IO_ZiG73D6GLRvPwOJRH_98BHl/view?usp=sharing"
-                        }
-                        2.toLong()->{
-                            imageURL = "https://drive.google.com/file/d/1PtRXOXiDNfc0G_ox4wSyiAnQzZhJrJyV/view?usp=sharing"
-                        }
-                        3.toLong()->{
-                            imageURL = "https://drive.google.com/file/d/1kR2bHPPFJifRfXuFh04x8X_69PFLMoWL/view?usp=sharing"
-                        }
-                        4.toLong()->{
-                            imageURL = "https://drive.google.com/file/d/1TJuli4AXqQsTe15GHHbczVkXXKGSpjU7/view?usp=sharing"
-                        }
-                        5.toLong()->{
-                            imageURL = "https://drive.google.com/file/d/1XPdYdp6bPF4Rz9MiwnSOUijmjOak7txB/view?usp=sharing"
-                        }
-                        6.toLong()->{
-                            imageURL = "https://drive.google.com/file/d/1PXnOIi-VeUZJHjOrgqtK-bAsWJYFHkSy/view?usp=sharing"
-                        }
-                        7.toLong()->{
-                            imageURL = "https://drive.google.com/file/d/1LIktDefaReuTg0SwtV_gf31tXuPw8q7Y/view?usp=sharing"
-                        }
-                        8.toLong()->{
-                            imageURL = "https://drive.google.com/file/d/1CqY0USis4gL_dOqIUoh6YGXcuuIHT4tE/view?usp=sharing"
-                        }
-                    }
 
-                    var pedido = PedidoEntity(productoId = itemSelected, userId = userId, name = name, imageURL = imageURL, status = status, street = street, suburb = suburb, postalCode = postalCode , notes = notes, presentation = 1, remainingPayment = remainingPayment)
+                    var pedido = PedidoEntity(productoId = itemSelected, userId = userId, name = name, imageURL = imageURL!!, status = status, street = street, suburb = suburb, postalCode = postalCode , notes = notes, presentation = 1, remainingPayment = remainingPayment)
 
                     try{
                         lifecycleScope.launch {

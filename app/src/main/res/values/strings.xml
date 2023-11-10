@@ -1,8 +1,18 @@
 <resources>
     <string name="app_name">ProyectoFinal</string>
+    <!-- Menu -->
+    <string name="inicio">Catálogo</string>
+    <string name="pedidos">Pedidos</string>
+    <string name="usuario">Usuario</string>
+
     <!-- Inicio de sesión/Registro -->
     <string name="iniciar">Iniciar sesión</string>
-    <string name="registrar">¿No tienes cuenta? Registrate aquí</string>
+    <string name="registrar">Registrarse</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="requiereInicioSesion">Se requiere iniciar sesión para acceder a esta sección</string>
+    <string name="botonPositivo">Aceptar</string>
+    <string name="botonNegativo">Cancelar</string>
+    <string name="olvidoContrasenia">Olvidé mi contraseña</string>
     <string name="catalogo">Ver catálogo</string>
     <string name="datos">%1s : %2s</string>
     <string name="male">Masculino</string>
@@ -16,6 +26,33 @@
     <string name="bienvenidaInicio">¡Bienvenido!</string>
     <string name="datosInicio">Por favor, ingresa tus datos</string>
     <string name="regresar">Regresar</string>
+    <string name="correoElectronico">Correo Electrónico</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="configuración">Configuración</string>
+    <string name="domiciliosEntrega">Domicilios de entrega</string>
+    <string name="cerrarSesion">Cerrar sesión</string>
+    <string name="hastaLuego">¡Hasta Luego!</string>
+    <string name="correoEnviado">El correo de verificación ha sido enviado</string>
+    <string name="correoNoEnviado">No se pudo enviar el correo de verificación</string>
+    <string name="usuarioCreado">Usuario creado</string>
+    <string name="restablecerContraseña">Restablecer contraseña</string>
+    <string name="correoEnlaceRestablecerContraseña">Ingrese su correo para recibir el enlace para restablecer</string>
+    <string name="enviar">Enviar</string>
+    <string name="enlaceRestablecerContraseñaExitoso">El enlace para restablecer la contraseña ha sido enviado a su correo</string>
+    <string name="enlaceRestablecerContraseñaFallido">El enlace no se ha podido enviar: %s</string>
+    <string name="favorIngresarCorreo">Favor de ingresar la dirección de correo</string>
+    <string name="seRequiereCorreo">Se requiere el correo</string>
+    <string name="seRequiereContraseña">Se requiere una contraseña o la contraseña no tiene por lo menos 6 caracteres</string>
+    <string name="errorCorreoFormato">Error: El correo electrónico no tiene un formato correcto</string>
+    <string name="errorContraseñaInvalida">Error: La contraseña no es válida</string>
+    <string name="errorContraseñaIngreso">Error: Una cuenta ya existe con el mismo correo, pero con diferentes datos de ingreso</string>
+    <string name="errorCuentaYaExiste">Error: el correo electrónico ya está en uso con otra cuenta</string>
+    <string name="errorSesionExpirada">Error: La sesión ha expirado. Favor de ingresar nuevamente</string>
+    <string name="errorUsuarioInexistente">Error: No existe el usuario con la información proporcionada</string>
+    <string name="errorContraseñaDebil">Error: La contraseña debe de tener por lo menos 6 caracteres</string>
+    <string name="errorNoConexion">Error: Red no disponible o se interrumpió la conexión</string>
+    <string name="errorGeneral">Error. No se pudo autenticar exitosamente</string>
+    <string name="autenticacionExitosa">Autenticación exitosa</string>
 
     <!--Pedidos-->
     <string name="finalizar">Finalizar y Guardar</string>
@@ -53,6 +90,12 @@
     <string name="coma">, </string>
     <string name="noRegistros">Sin registros por mostrar</string>
     <string name="codigoPostal">Codigo postal: </string>
+    <string name="recargar">Recargar</string>
+    <string name="eliminarPedido">Eliminar pedido</string>
+    <string name="mensajeEliminarPedido">¿Está seguro de querer eliminar este pedido?</string>
+    <string name="eliminacionExitosa">Pedido eliminado exitosamente</string>
+    <string name="eliminacionFallida">Ocurrió un error, favor de reintentar</string>
+
 
 
     <!--Catálogo-->
@@ -60,6 +103,7 @@
     <string name="detalleProducto">Detalle del producto</string>
     <string name="tipo">Tipo de producto</string>
     <string name="presentaciones">Presentaciones y precio del producto</string>
+    <string name="pres">Presentaciones del producto</string>
     <string name="ordenar">Ordenar</string>
     <string name="descripción">Descripción</string>
     <string name="presentacionesConPrecio">%1s : $%2s</string>

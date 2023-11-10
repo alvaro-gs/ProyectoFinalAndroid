@@ -64,7 +64,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
             }
             if(!error) {
-                val intent = Intent(requireContext(), CatalogoActivity::class.java).apply {
+                val intent = Intent(requireContext(), MainActivity::class.java).apply {
                     putExtra("KEY_INFO", "Registro")
                     putExtra("EXTRA_BUNDLE", bundle)
                 }

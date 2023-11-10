@@ -15,7 +15,7 @@ data class PedidoEntity(
     var productoId: Long = 0,
 
     @ColumnInfo(name = "pedido_user_id")
-    var userId: Long = 0,
+    var userId: String = "",
 
     @ColumnInfo(name = "pedido_name")
     var name: String,
