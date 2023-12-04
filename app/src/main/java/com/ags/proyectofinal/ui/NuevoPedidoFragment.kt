@@ -1,7 +1,6 @@
 package com.ags.proyectofinal.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.ags.proyectofinal.R
 import com.ags.proyectofinal.application.ProyectoFinalApp
 import com.ags.proyectofinal.data.db.PedidoRepository
@@ -20,157 +17,96 @@ import com.ags.proyectofinal.data.db.model.PedidoEntity
 import com.ags.proyectofinal.data.remote.ProductoRepository
 import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.FragmentNuevoPedidoBinding
-import com.ags.proyectofinal.util.Constants
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.IOException
-import java.util.ArrayList
 
 
+private const val TIPO = "tipo"
+private const val PEDIDO_ID = "pedido_id"
 class NuevoPedidoFragment (
-    private val updateUI: () -> Unit
 ): Fragment() {
 
-    private var _binding: FragmentNuevoPedidoBinding ? = null
+    private var _binding: FragmentNuevoPedidoBinding? = null
     private val binding get() = _binding!!
     private lateinit var firebaseAuth: FirebaseAuth
     private var user: FirebaseUser? = null
     private var userId = ""
+
     private lateinit var repository: PedidoRepository
     private lateinit var productoRepository: ProductoRepository
-    private var itemSelected : Long = 0
+    private var pedido: PedidoEntity? = null
+    private var itemSelected: Long = 0
+    private var imageSelected: String = ""
     private var listaProductos: List<ProductoDto> = emptyList()
     private var listaNombresProductos: MutableList<String> = emptyList<String>().toMutableList()
-    private var listaProductosAux: MutableList<Int> = emptyList<Int>().toMutableList()
+    private var tipo: Char = '_'
+    private var pedidoId: Long = -1
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        repository = (requireContext().applicationContext as ProyectoFinalApp).repository
+        arguments?.let {
+            tipo = it.getChar(TIPO, '_')
+            pedidoId = it.getLong(PEDIDO_ID, -1)
+            if (tipo != 'N') {
+                lifecycleScope.launch {
+                    pedido = repository.getPedidoById(pedidoId)
+
+                }
+            }
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentNuevoPedidoBinding.inflate(inflater,container,false)
+        _binding = FragmentNuevoPedidoBinding.inflate(inflater, container, false)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (tipo != 'N') {
+            binding.tvTitulo.text = getString(R.string.actualizarPedido)
+        } else {
+            binding.tvTitulo.text = getString(R.string.nuevoPedido)
+        }
 
-        repository = (requireContext().applicationContext as ProyectoFinalApp).repository
         productoRepository = (requireContext().applicationContext as ProyectoFinalApp).productoRepository
         firebaseAuth = FirebaseAuth.getInstance()
         user = firebaseAuth.currentUser
-        if (user!= null){
+        if (user != null) {
             userId = user!!.uid
         }
 
+        load()
 
-        lifecycleScope.launch {
-            val call: Call<List<ProductoDto>> = productoRepository.getCatalogoProductosApiary()
+        // konecta , paypal (pasarelas de pago)
 
-            call.enqueue(object: Callback<List<ProductoDto>> {
-                override fun onResponse(
-                    call: Call<List<ProductoDto>>,
-                    response: Response<List<ProductoDto>>
-                ) {
-                    //binding.pbLoading.visibility = View.GONE
-                    Log.d(Constants.LOGTAG, "Respuesta del servidor ${response.body()}")
-                    response.body()?.let {productos ->
-                        listaProductos = productos
-                        listaNombresProductos.add("Ninguno Seleccionado")
-                        for (i in productos.indices){
-                            listaNombresProductos.add(listaProductos[i].name.toString())
-                        }
-
-                    }
-                }
-
-                override fun onFailure(call: Call<List<ProductoDto>>, t: Throwable) {
-                    //Manejo del error
-                   ///binding.pbLoading.visibility = View.GONE
-                    Log.d(Constants.LOGTAG,"Error: ${t.message}")
-                    Toast.makeText(requireContext(), getString(R.string.errorConexion), Toast.LENGTH_LONG).show()
-                }
-
-            })
-
-        }
 
         binding.apply {
 
-            tvAdress.visibility = View.GONE
-            tvStreet.visibility = View.GONE
-            etStreet.visibility = View.GONE
-            tvSuburb.visibility = View.GONE
-            etSuburb.visibility = View.GONE
-            tvPostalCode.visibility = View.GONE
-            etPostalCode.visibility = View.GONE
-            tvNotes.visibility = View.GONE
-            etNotes.visibility = View.GONE
-
-            rgDelivery.setOnCheckedChangeListener { _, checkedId ->
-                rbDomicilio.error = null
-                rbSucursal.error = null
-                etStreet.error = null
-                etSuburb.error = null
-                etPostalCode.error = null
-                when(checkedId){
-                    R.id.rbSucursal -> {
-                        tvAdress.visibility = View.GONE
-                        tvStreet.visibility = View.GONE
-                        etStreet.visibility = View.GONE
-                        tvSuburb.visibility = View.GONE
-                        etSuburb.visibility = View.GONE
-                        tvPostalCode.visibility = View.GONE
-                        etPostalCode.visibility = View.GONE
-                        tvNotes.visibility = View.GONE
-                        etNotes.visibility = View.GONE
-                    }
-                    R.id.rbDomicilio -> {
-                        tvAdress.visibility = View.VISIBLE
-                        tvStreet.visibility = View.VISIBLE
-                        etStreet.visibility = View.VISIBLE
-                        tvSuburb.visibility = View.VISIBLE
-                        etSuburb.visibility = View.VISIBLE
-                        tvPostalCode.visibility = View.VISIBLE
-                        etPostalCode.visibility = View.VISIBLE
-                        tvNotes.visibility = View.VISIBLE
-                        etNotes.visibility = View.VISIBLE
-                    }
-
-                }
-
-            }
-
-            listaProductosAux.add(0)
-            listaProductosAux.add(1)
-            listaProductosAux.add(2)
-            listaProductosAux.add(3)
-            listaProductosAux.add(4)
-            listaProductosAux.add(5)
-            listaProductosAux.add(6)
-            listaProductosAux.add(7)
-            listaProductosAux.add(8)
-            //var adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,listaNombresProductos)
-            var adapter = ArrayAdapter(requireContext(),android.R.layout.simple_spinner_item,listaProductosAux)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            etProduct.adapter = adapter
-
-            // konecta , paypal (pasarelas de pago)
-
-            etProduct.setSelection(0)
-            etProduct.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            etProduct.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
                     view: View?,
                     position: Int,
                     id: Long
                 ) {
-                    //itemSelected = listaNombresProductos[position].toLong()
-                    itemSelected = listaProductosAux[position].toLong()
-                    Toast.makeText(requireContext(), itemSelected.toString(), Toast.LENGTH_SHORT).show()
+                    itemSelected = position.toLong() + 1
+                    imageSelected = listaProductos[position].imageURL!!
+                    Glide.with(requireContext())
+                        .load(imageSelected)
+                        .into(ivProduct)
 
                 }
 
@@ -180,100 +116,131 @@ class NuevoPedidoFragment (
 
 
             }
-            btSend.setOnClickListener {
-                if (validateFields()){
-                    var name = getString(R.string.pedidoTexto) + itemSelected.toString()
+            btNext.setOnClickListener {
+                if (tipo == 'N') {
+                    parentFragmentManager.beginTransaction().replace(
+                        R.id.fgContainerView,
+                        PresentacionFragment.newInstance(
+                            tipo = tipo,
+                            productoId = itemSelected,
+                            productoImageURL = imageSelected,
+                            pedidoId = -1
+                        )
+                    ).addToBackStack(null).commit()
+                } else {
+                    parentFragmentManager.beginTransaction().replace(
+                        R.id.fgContainerView,
+                        PresentacionFragment.newInstance(
+                            tipo = tipo,
+                            productoId = itemSelected,
+                            productoImageURL = imageSelected,
+                            pedidoId = pedidoId
+                        )
+                    ).addToBackStack(null).commit()
+                    Toast.makeText(requireContext(), "Frag${itemSelected}", Toast.LENGTH_SHORT)
+                        .show()
+                }
 
-                    var status: Short = 0
-                    var street = ""
-                    var suburb = ""
-                    var postalCodeString = ""
-                    var postalCode = -1
-                    var notes = ""
-                    var remainingPayment = 100.00
-                    var imageURL = listaProductos[itemSelected.toInt()].imageURL
+            }
+        }
+    }
 
-                    if(rgDelivery.checkedRadioButtonId == R.id.rbDomicilio){
+    private fun load() {
+        binding.tvProduct.visibility = View.GONE
+        binding.etProduct.visibility = View.GONE
+        binding.ivProduct.visibility = View.GONE
+        binding.btNext.visibility = View.GONE
+        binding.btReload.visibility = View.GONE
+        binding.tvError.visibility = View.GONE
+        binding.pbLoading.visibility = View.VISIBLE
+        lifecycleScope.launch {
+            val call: Call<List<ProductoDto>> = productoRepository.getCatalogoProductosApiary()
+            call.enqueue(object : Callback<List<ProductoDto>> {
+                override fun onResponse(
+                    call: Call<List<ProductoDto>>,
+                    response: Response<List<ProductoDto>>
+                ) {
 
-                        street = etStreet.text.toString()
-                        suburb = etSuburb.text.toString()
-                        postalCodeString = etPostalCode.text.toString()
-                        postalCode = postalCodeString.toInt()
-                        notes = etNotes.text.toString()
-
-                    }
-
-
-                    var pedido = PedidoEntity(productoId = itemSelected, userId = userId, name = name, imageURL = imageURL!!, status = status, street = street, suburb = suburb, postalCode = postalCode , notes = notes, presentation = 1, remainingPayment = remainingPayment)
-
-                    try{
-                        lifecycleScope.launch {
-                            repository.insertPedido(pedido)
-                            updateUI
+                    binding.tvProduct.visibility = View.VISIBLE
+                    binding.etProduct.visibility = View.VISIBLE
+                    binding.ivProduct.visibility = View.VISIBLE
+                    binding.btNext.visibility = View.VISIBLE
+                    binding.pbLoading.visibility = View.GONE
+                    response.body()?.let { productos ->
+                        listaProductos = productos
+                        for (i in productos.indices) {
+                            listaNombresProductos.add(listaProductos[i].name.toString())
                         }
-                    }catch (e: IOException){
-                        e.printStackTrace()
+
+                        binding.apply {
+                            etProduct.adapter = ArrayAdapter(
+                                requireContext(),
+                                R.layout.spinner_layout,
+                                R.id.spinnerText,
+                                listaNombresProductos
+                            )
+                            if (tipo != 'N') {
+                                itemSelected = pedido!!.productoId
+                                imageSelected =
+                                    listaProductos[(itemSelected - 1).toInt()].imageURL!!
+                                etProduct.setSelection((itemSelected - 1).toInt())
+                                Glide.with(requireContext())
+                                    .load(imageSelected)
+                                    .into(ivProduct)
+                            }
+                        }
+
+                    }
+                }
+
+                override fun onFailure(call: Call<List<ProductoDto>>, t: Throwable) {
+                    //Manejo del error
+                    binding.tvProduct.visibility = View.GONE
+                    binding.etProduct.visibility = View.GONE
+                    binding.ivProduct.visibility = View.GONE
+                    binding.btNext.visibility = View.GONE
+                    binding.pbLoading.visibility = View.GONE
+                    binding.tvError.visibility = View.VISIBLE
+                    binding.btReload.visibility = View.VISIBLE
+
+                    binding.btReload.setOnClickListener {
+                        load()
                     }
 
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fgContainerView, ListaPedidosFragment.newInstance())
-                        .commit()
-
                 }
-                else{
-                    setErrorMessages()
 
-                }
-            }
+            })
+
         }
-    }
-    private fun validateFields() : Boolean {
-        binding.apply {
-            when (rgDelivery.checkedRadioButtonId) {
-                R.id.rbDomicilio -> {
-                    return (itemSelected != 0.toLong()
-                            && etStreet.text.isNotEmpty()
-                            && etSuburb.text.isNotEmpty()
-                            && etPostalCode.text.isNotEmpty())
-                }
 
-                R.id.rbSucursal -> {
-                    return (itemSelected != 0.toLong())
-                }
-            }
-            return false
-        }
     }
-    private fun setErrorMessages(){
+
+
+    private fun validateFields(): Boolean {
+        return true
+    }
+
+    private fun setErrorMessages() {
         binding.apply {
-            if(itemSelected == 0.toLong()){
+            if (itemSelected.toInt() == 0) {
                 (etProduct.selectedView as TextView).error = getString(R.string.error)
             }
-            if(rgDelivery.checkedRadioButtonId == -1){
-                rbDomicilio.error = getString(R.string.errorRadioButton)
-                rbSucursal.error = getString(R.string.errorRadioButton)
-            }
-            if (rgDelivery.checkedRadioButtonId == R.id.rbDomicilio) {
-                if (etStreet.text.isEmpty()) {
-                    etStreet.error = getString(R.string.error)
-                }
-                if (etSuburb.text.isEmpty()) {
-                    etSuburb.error = getString(R.string.error)
-                }
-                if (etPostalCode.text.isEmpty()) {
-                    etPostalCode.error = getString(R.string.error)
-                }
-            }
-            Toast.makeText(requireContext(),getString(R.string.errorMessage) , Toast.LENGTH_LONG).show()
         }
     }
 
-    override fun onDestroy(){
+    override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
+
     companion object {
-        fun newInstance(updateUI: () -> Unit) = NuevoPedidoFragment(updateUI)
+        fun newInstance(tipo: Char,pedidoId:Long) = NuevoPedidoFragment().apply {
+            arguments = Bundle().apply {
+                putChar(TIPO,tipo)
+                putLong(PEDIDO_ID,pedidoId)
+            }
+        }
     }
 
 }

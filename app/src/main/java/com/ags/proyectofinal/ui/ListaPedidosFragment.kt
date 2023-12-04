@@ -64,13 +64,12 @@ class ListaPedidosFragment : Fragment() {
             addItemDecoration(DividerItemDecoration(requireContext(),1))
 
         }
-
         updateUI()
 
 
         binding.btNew.setOnClickListener{
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fgContainerView, NuevoPedidoFragment.newInstance(updateUI = {updateUI()}))
+                .replace(R.id.fgContainerView, NuevoPedidoFragment.newInstance(tipo = 'N', pedidoId = -1))
                 .addToBackStack("NuevoPedidoFragment")
                 .commit()
         }
@@ -80,10 +79,22 @@ class ListaPedidosFragment : Fragment() {
     private fun onPedidoClicked(pedido:PedidoEntity,action:String){
         when (action){
             "Update" -> {
-                parentFragmentManager.beginTransaction()
+                /*parentFragmentManager.beginTransaction()
                     .replace(R.id.fgContainerView, EditarPedidoFragment.newInstance(pedido = pedido, updateUI = {updateUI()}))
                     .addToBackStack("EditarPedidoFragment")
-                    .commit()
+                    .commit()*/
+                if (user?.uid == "AMufvA6zA4ZaAOWrnegGS5qyecI3"){
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fgContainerView, EditarPedidoAdminFragment.newInstance(pedido = pedido))
+                        .addToBackStack("DetallePedidoFragment")
+                        .commit()
+                }
+                else{
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fgContainerView, NuevoPedidoFragment.newInstance(tipo = 'E', pedidoId = pedido.id))
+                        .addToBackStack("EditarPedidoFragment")
+                        .commit()
+                }
             }
             "Delete" -> {
                 AlertDialog.Builder(requireContext())
@@ -110,23 +121,36 @@ class ListaPedidosFragment : Fragment() {
             }
 
             "Detail" ->{
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fgContainerView, DetallePedidoFragment.newInstance(pedido = pedido, updateUI = {updateUI()}))
-                    .addToBackStack("DetallePedidoFragment")
-                    .commit()
+                if (user?.uid == "AMufvA6zA4ZaAOWrnegGS5qyecI3"){
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fgContainerView, EditarPedidoAdminFragment.newInstance(pedido = pedido))
+                        .addToBackStack("DetallePedidoFragment")
+                        .commit()
+                }
+                else{
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.fgContainerView, DetallePedidoFragment.newInstance(pedido = pedido))
+                        .addToBackStack("DetallePedidoFragment")
+                        .commit()
+                }
             }
         }
     }
 
     private fun updateUI(){
         lifecycleScope.launch {
-            //Toast.makeText(requireContext(), "ID: $userId", Toast.LENGTH_SHORT).show()
-            pedidos = repository.getAllPedidosByUser(userId)
+
+            pedidos = if (user?.uid == "AMufvA6zA4ZaAOWrnegGS5qyecI3"){
+                repository.getAllPedidos()
+            }else{
+                repository.getAllPedidosByUser(userId)
+            }
+
 
             if (pedidos.isNotEmpty()) {
 
             }else{
-                //Toast.makeText(requireContext(), getString(R.string.noRegistros), Toast.LENGTH_LONG).show()
+
             }
             pedidoAdapter.updateList(pedidos)
         }

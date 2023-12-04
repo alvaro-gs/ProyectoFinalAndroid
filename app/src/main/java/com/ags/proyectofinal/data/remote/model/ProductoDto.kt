@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ProductoDto(
     @SerializedName("id")
-    var id : String? = null,
+    var id : Long ?= null,
     @SerializedName("image")
     var imageURL: String ? = null,
     @SerializedName("name")

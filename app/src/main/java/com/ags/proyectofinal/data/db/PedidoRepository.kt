@@ -13,7 +13,9 @@ class PedidoRepository(private val pedidoDao: PedidoDao) {
 
     suspend fun getAllPedidosByUser(userId: String) : List<PedidoEntity> = pedidoDao.getAllPedidosByUser(userId)
 
+    suspend fun getPedidoById(pedidoId:Long): PedidoEntity = pedidoDao.getPedidoById(pedidoId)
 
+    suspend fun getAllPedidos(): List<PedidoEntity> = pedidoDao.getAllPedidos()
     suspend fun updatePedido(pedido: PedidoEntity){
         pedidoDao.updatePedido(pedido)
     }

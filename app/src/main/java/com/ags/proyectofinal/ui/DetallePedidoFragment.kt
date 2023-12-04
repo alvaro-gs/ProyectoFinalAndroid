@@ -8,14 +8,14 @@ import android.view.ViewGroup
 import com.ags.proyectofinal.R
 import com.ags.proyectofinal.data.db.model.PedidoEntity
 import com.ags.proyectofinal.databinding.FragmentDetallePedidoBinding
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 
 
 class DetallePedidoFragment(
-    private var pedido : PedidoEntity,
-    private val updateUI: () -> Unit
+    private var pedido : PedidoEntity
 )
-    : Fragment(R.layout.fragment_detalle_pedido) {
+    : Fragment() {
 
     private  var _binding : FragmentDetallePedidoBinding ? = null
     private val binding get() = _binding!!
@@ -64,7 +64,11 @@ class DetallePedidoFragment(
                 status = getString(R.string.estatus4)
             }
 
-            5.toShort() ->{
+            5.toShort() -> {
+                status = getString(R.string.estatus5)
+            }
+
+            6.toShort() ->{
                 status = getString(R.string.estatus5)
             }
         }
@@ -72,56 +76,12 @@ class DetallePedidoFragment(
             tvDetail.text = detail
             tvEstatus.text = status
             tvPay.text = pedido.remainingPayment.toString()
-            when(pedido.productoId){
-                1.toLong()->{
-                    Picasso.get().load(pedido.imageURL)
-                        .error(R.drawable.pastelzanahoria)
-                        .placeholder(R.drawable.ic_image)
-                        .into(ivProduct)
-                }
-                2.toLong()->{
-                    Picasso.get().load(pedido.imageURL)
-                        .error(R.drawable.pastelredvelvet)
-                        .placeholder(R.drawable.ic_image)
-                        .into(ivProduct)
-                }
-                3.toLong()->{
-                    Picasso.get().load(pedido.imageURL)
-                        .error(R.drawable.pastelplatano)
-                        .placeholder(R.drawable.ic_image)
-                        .into(ivProduct)
-                }
-                4.toLong()->{
-                    Picasso.get().load(pedido.imageURL)
-                        .error(R.drawable.brownie)
-                        .placeholder(R.drawable.ic_image)
-                        .into(ivProduct)
-                }
-                5.toLong()->{
-                    Picasso.get().load(pedido.imageURL)
-                        .error(R.drawable.muffinchocolate)
-                        .placeholder(R.drawable.ic_image)
-                        .into(ivProduct)
-                }
-                6.toLong()->{
-                    Picasso.get().load(pedido.imageURL)
-                        .error(R.drawable.muffinscalabaza)
-                        .placeholder(R.drawable.ic_image)
-                        .into(ivProduct)
-                }
-                7.toLong()->{
-                    Picasso.get().load(pedido.imageURL)
-                        .error(R.drawable.scones)
-                        .placeholder(R.drawable.ic_image)
-                        .into(ivProduct)
-                }
-                8.toLong()->{
-                    Picasso.get().load(pedido.imageURL)
-                        .error(R.drawable.tartafrutas)
-                        .placeholder(R.drawable.ic_image)
-                        .into(ivProduct)
-                }
-            }
+            Glide.with(requireContext())
+                .load(pedido.imageURL)
+                .into(ivProduct)
+            /*Picasso.get().load(pedido.imageURL)
+                .placeholder(R.drawable.ic_image)
+                .into(ivProduct)*/
 
         }
 
@@ -138,6 +98,6 @@ class DetallePedidoFragment(
         _binding = null
     }
     companion object {
-        fun newInstance(pedido: PedidoEntity,updateUI: () -> Unit) = DetallePedidoFragment(pedido,updateUI)
+        fun newInstance(pedido: PedidoEntity) = DetallePedidoFragment(pedido)
     }
 }

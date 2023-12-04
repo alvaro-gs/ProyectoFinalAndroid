@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.PresentacionFragment">
+
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:text="@string/eligePresentacion"
+        android:background="@color/morado1"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:paddingVertical="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:indeterminateDrawable="@drawable/loading_anim"
+        android:indeterminateDuration="1500"
+        />
+    <TextView
+        android:id="@+id/tvPresentations"
+        app:layout_constraintTop_toBottomOf= "@id/pbLoading"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/NormalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/presentaciones"/>
+    <Spinner
+        android:id="@+id/etPresentation"
+        app:layout_constraintTop_toBottomOf="@id/tvPresentations"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/spinner_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btNext"
+        android:text="@string/siguiente"
+        app:layout_constraintTop_toBottomOf="@id/etPresentation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/btReload"
+        android:text="@string/recargar"
+        app:layout_constraintTop_toBottomOf="@id/btNext"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <TextView
+        android:id="@+id/tvError"
+        android:text="@string/errorConexion"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/btReload"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

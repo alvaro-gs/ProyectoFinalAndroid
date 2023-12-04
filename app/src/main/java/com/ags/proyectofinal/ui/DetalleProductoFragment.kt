@@ -17,6 +17,7 @@ import com.ags.proyectofinal.data.remote.model.DetalleProductoDto
 import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.FragmentDetalleProductoBinding
 import com.ags.proyectofinal.util.Constants
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -30,10 +31,20 @@ class DetalleProductoFragment : Fragment() {
     private var _binding: FragmentDetalleProductoBinding ?= null
     private val binding get() = _binding!!
 
-    private var productoId: String?= null
+    private var productoId: Long = -1
+
+    private var productoImageURL: String = ""
 
     private lateinit var repository: ProductoRepository
 
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            productoId = it.getLong(PRODUCTO_ID,-1)
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,14 +57,17 @@ class DetalleProductoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.tvError.visibility = View.GONE
         binding.btReload.visibility = View.GONE
+        repository = (requireActivity().application as ProyectoFinalApp).productoRepository
+        load()
 
-
-        arguments?.let {
-            productoId = it.getString(PRODUCTO_ID)
-            Log.d(Constants.LOGTAG, "Id recibido: $productoId")
-            repository = (requireActivity().application as ProyectoFinalApp).productoRepository
-            load()
+        binding.btOrder.setOnClickListener {
+            parentFragmentManager.beginTransaction().
+            replace(R.id.fgContainerView,PresentacionFragment.newInstance(tipo='N',productoId = productoId, productoImageURL = productoImageURL, pedidoId = -1)).
+            addToBackStack(null).
+            commit()
         }
+
+
     }
 
     private fun load(){
@@ -72,7 +86,7 @@ class DetalleProductoFragment : Fragment() {
 
         lifecycleScope.launch {
             productoId?.let { id ->
-                val call: Call<DetalleProductoDto> = repository.getDetalleProductoApiary(id)
+                val call: Call<DetalleProductoDto> = repository.getDetalleProductoApiary(id.toString())
                 call.enqueue(object : Callback<DetalleProductoDto> {
                     override fun onResponse(
                         call: Call<DetalleProductoDto>,
@@ -83,10 +97,16 @@ class DetalleProductoFragment : Fragment() {
 
                             tvName.text = response.body()?.name
 
-                            Picasso.get()
+                            productoImageURL = response.body()?.imageURL!!
+                            Glide.with(requireContext())
+                                .load(response.body()?.imageURL)
+                                .into(ivProduct)
+                            /*Picasso.get()
                                 .load(response.body()?.imageURL)
                                 .error(R.drawable.ic_image)
-                                .into(ivProduct)
+                                .into(ivProduct)*/
+
+
 
                             tvDescription.text = response.body()?.description
                             var category = ""
@@ -141,9 +161,9 @@ class DetalleProductoFragment : Fragment() {
     }
     companion object {
         @JvmStatic
-        fun newInstance(productoId: String ) = DetalleProductoFragment().apply {
+        fun newInstance(productoId: Long ) = DetalleProductoFragment().apply {
             arguments = Bundle().apply {
-                putString(PRODUCTO_ID, productoId)
+                putLong(PRODUCTO_ID, productoId)
             }
         }
     }

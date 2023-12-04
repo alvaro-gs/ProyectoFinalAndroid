@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ags.proyectofinal.R
 import com.ags.proyectofinal.data.db.model.PedidoEntity
 import com.ags.proyectofinal.databinding.ItemPedidoBinding
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 
 
@@ -17,71 +18,16 @@ class PedidoAdapter(private val onPedidoClicked: (PedidoEntity, String) -> Unit)
     class ViewHolder(private val binding: ItemPedidoBinding) : RecyclerView.ViewHolder(binding.root){
         val updateIcon = binding.btEdit
         val deleteIcon = binding.btDelete
-        val detail = binding.ivPedido
-        fun bind(pedido: PedidoEntity,estatus : String){
+        val image = binding.ivPedido
+        fun bind(estatus : String){
 
             binding.apply {
                 tvEstatus.text = estatus
-                if(pedido.imageURL != "") {
-                    when (pedido.productoId) {
-                        1.toLong() -> {
-                            Picasso.get().load(pedido.imageURL)
-                                .error(R.drawable.pastelzanahoria)
-                                .placeholder(R.drawable.ic_image)
-                                .into(ivPedido)
-                        }
-
-                        2.toLong() -> {
-                            Picasso.get().load(pedido.imageURL)
-                                .error(R.drawable.pastelredvelvet)
-                                .placeholder(R.drawable.ic_image)
-                                .into(ivPedido)
-                        }
-
-                        3.toLong() -> {
-                            Picasso.get().load(pedido.imageURL)
-                                .error(R.drawable.pastelplatano)
-                                .placeholder(R.drawable.ic_image)
-                                .into(ivPedido)
-                        }
-
-                        4.toLong() -> {
-                            Picasso.get().load(pedido.imageURL)
-                                .error(R.drawable.brownie)
-                                .placeholder(R.drawable.ic_image)
-                                .into(ivPedido)
-                        }
-
-                        5.toLong() -> {
-                            Picasso.get().load(pedido.imageURL)
-                                .error(R.drawable.muffinchocolate)
-                                .placeholder(R.drawable.ic_image)
-                                .into(ivPedido)
-                        }
-
-                        6.toLong() -> {
-                            Picasso.get().load(pedido.imageURL)
-                                .error(R.drawable.muffinscalabaza)
-                                .placeholder(R.drawable.ic_image)
-                                .into(ivPedido)
-                        }
-
-                        7.toLong() -> {
-                            Picasso.get().load(pedido.imageURL)
-                                .error(R.drawable.scones)
-                                .placeholder(R.drawable.ic_image)
-                                .into(ivPedido)
-                        }
-
-                        8.toLong() -> {
-                            Picasso.get().load(pedido.imageURL)
-                                .error(R.drawable.tartafrutas)
-                                .placeholder(R.drawable.ic_image)
-                                .into(ivPedido)
-                        }
-                    }
-
-                }
+                /*if(pedido.imageURL != "") {
+                    Picasso.get().load(pedido.imageURL)
+                        .placeholder(R.drawable.ic_image)
+                        .into(ivPedido)
+                }*/
             }
         }
     }
@@ -93,8 +39,9 @@ class PedidoAdapter(private val onPedidoClicked: (PedidoEntity, String) -> Unit)
     override fun getItemCount(): Int = pedidos.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        var pedido = pedidos[position]
         var estatus = ""
-        when(pedidos[position].status){
+        when(pedido.status){
             0.toShort() -> {
                estatus = holder.itemView.context.getString(R.string.estatus0)
             }
@@ -119,7 +66,12 @@ class PedidoAdapter(private val onPedidoClicked: (PedidoEntity, String) -> Unit)
                 estatus = holder.itemView.context.getString(R.string.estatus5)
             }
         }
-        holder.bind(pedidos[position],estatus)
+
+        holder.bind(estatus)
+
+        Glide.with(holder.itemView.context)
+            .load(pedido.imageURL)
+            .into(holder.image)
 
         holder.updateIcon.setOnClickListener {
             onPedidoClicked(pedidos[position],"Update")
@@ -127,7 +79,7 @@ class PedidoAdapter(private val onPedidoClicked: (PedidoEntity, String) -> Unit)
         holder.deleteIcon.setOnClickListener {
             onPedidoClicked(pedidos[position],"Delete")
         }
-        holder.detail.setOnClickListener {
+        holder.image.setOnClickListener {
             onPedidoClicked(pedidos[position],"Detail")
         }
 

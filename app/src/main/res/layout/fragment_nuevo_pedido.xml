@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
             <TextView
                 android:id="@+id/tvTitulo"
-                android:text="@string/inicioPedido"
+                android:text="Titulo"
                 android:background="@color/morado1"
                 app:layout_constraintTop_toTopOf="parent"
                 android:gravity="center_horizontal"
@@ -29,169 +29,68 @@
                 android:paddingVertical="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+            <ProgressBar
+                android:id="@+id/pbLoading"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:indeterminateDrawable="@drawable/loading_anim"
+                android:indeterminateDuration="1500"
+                />
             <TextView
                 android:id="@+id/tvProduct"
-                app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+                app:layout_constraintTop_toBottomOf="@id/pbLoading"
                 app:layout_constraintStart_toStartOf="parent"
                 style="@style/NormalText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="@string/producto"/>
+                android:text="@string/listaProductos"/>
 
             <Spinner
                 android:id="@+id/etProduct"
                 app:layout_constraintTop_toBottomOf="@id/tvProduct"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="300dp"
+                tools:listitem="@layout/spinner_layout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tvPresentations"
+            <ImageView
+                android:id="@+id/ivProduct"
                 app:layout_constraintTop_toBottomOf="@id/etProduct"
-                app:layout_constraintStart_toStartOf="parent"
-                style="@style/NormalText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="@string/presentaciones"/>
-
-            <Spinner
-                android:id="@+id/etPresentation"
-                app:layout_constraintTop_toBottomOf="@id/tvPresentations"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tvDelivery"
-                app:layout_constraintTop_toBottomOf="@id/etPresentation"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="20dp"
-                android:text="@string/entrega"
-                style="@style/NormalText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <RadioGroup
-                android:id="@+id/rgDelivery"
-                style="@style/NormalText"
-                app:layout_constraintTop_toBottomOf="@id/tvDelivery"
-                app:layout_constraintStart_toStartOf="parent"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <RadioButton
-                    android:id="@+id/rbSucursal"
-                    style="@style/NormalText"
-                    android:text="@string/sucursal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <RadioButton
-                    android:id="@+id/rbDomicilio"
-                    style="@style/NormalText"
-                    android:text="@string/domicilio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/tvAdress"
-                android:text="@string/domicilioEntrega"
-                style="@style/NormalText"
-                app:layout_constraintTop_toBottomOf="@id/rgDelivery"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/tvStreet"
-                android:text="@string/calle"
-                style="@style/NormalText"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/tvAdress"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:id="@+id/etStreet"
-                android:hint="@string/calleNumero"
-                android:inputType="text"
-                app:layout_constraintTop_toBottomOf="@id/tvStreet"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/tvSuburb"
-                android:text="@string/colonia"
-                style="@style/NormalText"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/etStreet"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:id="@+id/etSuburb"
-                android:hint="@string/colonia"
-                android:inputType="text"
-                app:layout_constraintTop_toBottomOf="@id/tvSuburb"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/tvPostalCode"
-                android:text="@string/codigoP"
-                style="@style/NormalText"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/etSuburb"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:id="@+id/etPostalCode"
-                android:hint="@string/codigoP"
-                android:inputType="number"
-                app:layout_constraintTop_toBottomOf="@id/tvPostalCode"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/tvNotes"
-                android:text="@string/observacionesDireccion"
-                style="@style/NormalText"
-                android:layout_marginTop="10dp"
-                app:layout_constraintTop_toBottomOf="@id/etPostalCode"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <EditText
-                android:id="@+id/etNotes"
-                android:hint="@string/observacionesDireccion"
-                android:inputType="text"
-                app:layout_constraintTop_toBottomOf="@id/tvNotes"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <TextView
-                android:id="@+id/tvTotal"
-                style="@style/NormalText"
-                android:text="@string/totalPago"
-                app:layout_constraintTop_toBottomOf="@id/etNotes"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="10dp"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-            <Button
-                android:id="@+id/btSend"
-                android:text="@string/finalizar"
-                app:layout_constraintTop_toTopOf="@id/tvTotal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="30dp"
+                android:layout_width="250dp"
+                android:layout_height="250dp"/>
+
+            <Button
+                android:id="@+id/btNext"
+                android:text="@string/siguiente"
+                app:layout_constraintTop_toBottomOf="@id/ivProduct"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/btReload"
+                android:text="@string/recargar"
+                app:layout_constraintTop_toBottomOf="@id/btNext"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/tvError"
+                android:text="@string/errorConexion"
+                android:layout_marginTop="10dp"
+                app:layout_constraintTop_toBottomOf="@id/btReload"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </androidx.constraintlayout.widget.ConstraintLayout>

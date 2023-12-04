@@ -17,6 +17,8 @@ import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.FragmentListaPedidosBinding
 import com.ags.proyectofinal.databinding.FragmentListaProductosBinding
 import com.ags.proyectofinal.util.Constants
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,6 +31,10 @@ class ListaProductosFragment : Fragment() {
 
     private lateinit var repository: ProductoRepository
 
+    // Firebase
+    private lateinit var firebaseAuth: FirebaseAuth
+    private var user: FirebaseUser? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,9 +45,8 @@ class ListaProductosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.tvError.visibility = View.GONE
-        binding.btReload.visibility = View.GONE
+        firebaseAuth = FirebaseAuth.getInstance()
+        user = firebaseAuth.currentUser
         repository = (requireActivity() .application as ProyectoFinalApp).productoRepository
         load()
     }
@@ -50,6 +55,8 @@ class ListaProductosFragment : Fragment() {
         binding.tvError.visibility = View.GONE
         binding.btReload.visibility = View.GONE
         binding.pbLoading.visibility = View.VISIBLE
+        binding.listaProductos.visibility = View.GONE
+        binding.tvTitulo.visibility = View.GONE
 
         lifecycleScope.launch {
             val call: Call<List<ProductoDto>> = repository.getCatalogoProductosApiary()
@@ -60,6 +67,19 @@ class ListaProductosFragment : Fragment() {
                     response: Response<List<ProductoDto>>
                 ) {
                     binding.pbLoading.visibility = View.GONE
+                    binding.listaProductos.visibility = View.VISIBLE
+                    binding.tvTitulo.visibility = View.VISIBLE
+                    if (user != null){
+                        if (user?.uid == "AMufvA6zA4ZaAOWrnegGS5qyecI3" ){
+                            binding.tvTitulo.text = getString(R.string.bienvenidaInicioAdmin,user?.email)
+                        }else{
+                            binding.tvTitulo.text = getString(R.string.bienvenidaInicio,user?.email)
+                        }
+
+                    }else{
+                        binding.tvTitulo.text = getString(R.string.bienvenidaInicioInvitado)
+                    }
+
                     Log.d(Constants.LOGTAG, "Respuesta del servidor ${response.body()}")
 
                     response.body()?.let {productos ->
@@ -84,6 +104,8 @@ class ListaProductosFragment : Fragment() {
                     binding.pbLoading.visibility = View.GONE
                     binding.tvError.visibility = View.VISIBLE
                     binding.btReload.visibility = View.VISIBLE
+                    binding.listaProductos.visibility = View.GONE
+                    binding.tvTitulo.visibility = View.GONE
                     Log.d(Constants.LOGTAG,"Error: ${t.message}")
 
                     binding.btReload.setOnClickListener {

@@ -20,8 +20,8 @@
 
             <TextView
                 android:id="@+id/tvBienvenida"
-                android:text= "@string/bienvenidaInicio"
-                style="@style/TitleText"
+                android:text= "@string/bienvenidaLogin"
+                style="@style/LoginTitleText"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

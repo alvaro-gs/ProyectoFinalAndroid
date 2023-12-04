@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ags.proyectofinal.R
 import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.ItemProductoBinding
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 
 class ProductoAdapter(
@@ -14,12 +15,14 @@ class ProductoAdapter(
 ) : RecyclerView.Adapter<ProductoAdapter.ViewHolder>(){
 
     class ViewHolder(private val binding: ItemProductoBinding): RecyclerView.ViewHolder(binding.root) {
+        val image = binding.ivThumbnail
         fun bind(producto: ProductoDto) {
             binding.tvName.text  = producto.name
-            Picasso.get()
+            /*Picasso.get()
                 .load(producto.imageURL)
                 .error(R.drawable.ic_image)
-                .into(binding.ivThumbnail)
+                .into(binding.ivThumbnail)*/
+
         }
     }
 
@@ -33,6 +36,11 @@ class ProductoAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val producto = productos[position]
         holder.bind(producto)
+
+        Glide.with(holder.itemView.context)
+            .load(producto.imageURL)
+            .into(holder.image)
+
         holder.itemView.setOnClickListener{
             onProductoClicked(producto)
         }
