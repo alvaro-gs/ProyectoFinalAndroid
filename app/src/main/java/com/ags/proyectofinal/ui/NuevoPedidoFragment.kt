@@ -26,29 +26,30 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-private const val TIPO = "tipo"
-private const val PEDIDO_ID = "pedido_id"
+/*private const val TIPO = "tipo"
+private const val PEDIDO_ID = "pedido_id"*/
 class NuevoPedidoFragment (
+    private var pedido: PedidoEntity? = null
 ): Fragment() {
 
     private var _binding: FragmentNuevoPedidoBinding? = null
     private val binding get() = _binding!!
-    private lateinit var firebaseAuth: FirebaseAuth
-    private var user: FirebaseUser? = null
-    private var userId = ""
 
-    private lateinit var repository: PedidoRepository
+
+    private var producto: ProductoDto ?= null
+
     private lateinit var productoRepository: ProductoRepository
-    private var pedido: PedidoEntity? = null
     private var itemSelected: Long = 0
     private var imageSelected: String = ""
     private var listaProductos: List<ProductoDto> = emptyList()
     private var listaNombresProductos: MutableList<String> = emptyList<String>().toMutableList()
-    private var tipo: Char = '_'
+
+    /*private var tipo: Char = '_'
     private var pedidoId: Long = -1
+    private lateinit var repository: PedidoRepository*/
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         repository = (requireContext().applicationContext as ProyectoFinalApp).repository
         arguments?.let {
@@ -62,7 +63,7 @@ class NuevoPedidoFragment (
             }
         }
 
-    }
+    }*/
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,18 +76,13 @@ class NuevoPedidoFragment (
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (tipo != 'N') {
+        if (pedido != null) {
             binding.tvTitulo.text = getString(R.string.actualizarPedido)
         } else {
             binding.tvTitulo.text = getString(R.string.nuevoPedido)
         }
 
         productoRepository = (requireContext().applicationContext as ProyectoFinalApp).productoRepository
-        firebaseAuth = FirebaseAuth.getInstance()
-        user = firebaseAuth.currentUser
-        if (user != null) {
-            userId = user!!.uid
-        }
 
         load()
 
@@ -103,6 +99,7 @@ class NuevoPedidoFragment (
                     id: Long
                 ) {
                     itemSelected = position.toLong() + 1
+                    producto = listaProductos[position]
                     imageSelected = listaProductos[position].imageURL!!
                     Glide.with(requireContext())
                         .load(imageSelected)
@@ -117,28 +114,30 @@ class NuevoPedidoFragment (
 
             }
             btNext.setOnClickListener {
-                if (tipo == 'N') {
+                if (pedido == null ) {
                     parentFragmentManager.beginTransaction().replace(
                         R.id.fgContainerView,
                         PresentacionFragment.newInstance(
-                            tipo = tipo,
+                            pedido = pedido,
+                            producto = producto!!
+                            /*tipo = tipo,
                             productoId = itemSelected,
                             productoImageURL = imageSelected,
-                            pedidoId = -1
+                            pedidoId = -1*/
                         )
                     ).addToBackStack(null).commit()
                 } else {
                     parentFragmentManager.beginTransaction().replace(
                         R.id.fgContainerView,
                         PresentacionFragment.newInstance(
-                            tipo = tipo,
+                            pedido = pedido,
+                            producto = producto!!
+                            /*tipo = tipo,
                             productoId = itemSelected,
                             productoImageURL = imageSelected,
-                            pedidoId = pedidoId
+                            pedidoId = pedidoId*/
                         )
                     ).addToBackStack(null).commit()
-                    Toast.makeText(requireContext(), "Frag${itemSelected}", Toast.LENGTH_SHORT)
-                        .show()
                 }
 
             }
@@ -160,7 +159,7 @@ class NuevoPedidoFragment (
                     call: Call<List<ProductoDto>>,
                     response: Response<List<ProductoDto>>
                 ) {
-
+                    listaNombresProductos.clear()
                     binding.tvProduct.visibility = View.VISIBLE
                     binding.etProduct.visibility = View.VISIBLE
                     binding.ivProduct.visibility = View.VISIBLE
@@ -179,11 +178,22 @@ class NuevoPedidoFragment (
                                 R.id.spinnerText,
                                 listaNombresProductos
                             )
-                            if (tipo != 'N') {
+                            if (pedido != null) {
                                 itemSelected = pedido!!.productoId
-                                imageSelected =
-                                    listaProductos[(itemSelected - 1).toInt()].imageURL!!
+                                producto = listaProductos.find { it.id == pedido!!.productoId }
+                                imageSelected = producto!!.imageURL!!
+                                // Arreglar esto despues
+                                // Con get by index (ya que tengo el producto busco a que indice está asociado)
                                 etProduct.setSelection((itemSelected - 1).toInt())
+                                Glide.with(requireContext())
+                                    .load(imageSelected)
+                                    .into(ivProduct)
+                            }
+                            else {
+                                itemSelected = 0
+                                producto = listaProductos.first()
+                                imageSelected = producto!!.imageURL!!
+                                etProduct.setSelection(itemSelected.toInt())
                                 Glide.with(requireContext())
                                     .load(imageSelected)
                                     .into(ivProduct)
@@ -216,17 +226,7 @@ class NuevoPedidoFragment (
     }
 
 
-    private fun validateFields(): Boolean {
-        return true
-    }
 
-    private fun setErrorMessages() {
-        binding.apply {
-            if (itemSelected.toInt() == 0) {
-                (etProduct.selectedView as TextView).error = getString(R.string.error)
-            }
-        }
-    }
 
     override fun onDestroy() {
         super.onDestroy()
@@ -235,12 +235,12 @@ class NuevoPedidoFragment (
 
 
     companion object {
-        fun newInstance(tipo: Char,pedidoId:Long) = NuevoPedidoFragment().apply {
+        fun newInstance(pedido: PedidoEntity?) = NuevoPedidoFragment(pedido = pedido )/*.apply {
             arguments = Bundle().apply {
                 putChar(TIPO,tipo)
                 putLong(PEDIDO_ID,pedidoId)
             }
-        }
+        }*/
     }
 
 }

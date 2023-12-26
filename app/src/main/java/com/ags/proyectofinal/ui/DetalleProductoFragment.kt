@@ -1,5 +1,6 @@
 package com.ags.proyectofinal.ui
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.ags.proyectofinal.R
 import com.ags.proyectofinal.application.ProyectoFinalApp
@@ -18,6 +20,8 @@ import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.FragmentDetalleProductoBinding
 import com.ags.proyectofinal.util.Constants
 import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -26,7 +30,9 @@ import retrofit2.Response
 
 private const val PRODUCTO_ID = "producto_id"
 
-class DetalleProductoFragment : Fragment() {
+class DetalleProductoFragment (
+    private var producto: ProductoDto
+): Fragment() {
 
     private var _binding: FragmentDetalleProductoBinding ?= null
     private val binding get() = _binding!!
@@ -37,14 +43,18 @@ class DetalleProductoFragment : Fragment() {
 
     private lateinit var repository: ProductoRepository
 
+    private lateinit var firebaseAuth: FirebaseAuth
+
+    private var user: FirebaseUser? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             productoId = it.getLong(PRODUCTO_ID,-1)
         }
-    }
+    }*/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,19 +65,41 @@ class DetalleProductoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        firebaseAuth = FirebaseAuth.getInstance()
+        user = firebaseAuth.currentUser
         binding.tvError.visibility = View.GONE
         binding.btReload.visibility = View.GONE
         repository = (requireActivity().application as ProyectoFinalApp).productoRepository
         load()
 
         binding.btOrder.setOnClickListener {
-            parentFragmentManager.beginTransaction().
-            replace(R.id.fgContainerView,PresentacionFragment.newInstance(tipo='N',productoId = productoId, productoImageURL = productoImageURL, pedidoId = -1)).
-            addToBackStack(null).
-            commit()
+            if (user != null) {
+                parentFragmentManager.beginTransaction().
+                replace(R.id.fgContainerView,PresentacionFragment.newInstance(
+                    pedido = null,
+                    producto = producto
+                    /*tipo='N',
+                    productoId = productoId,
+                    productoImageURL = productoImageURL,
+                    pedidoId = -1*/)).
+                addToBackStack(null).
+                commit()
+            }
+            else{
+                AlertDialog.Builder(requireContext())
+                    .setTitle(getString(R.string.iniciar))
+                    .setMessage(R.string.requiereInicioSesion)
+                    .setPositiveButton(getString(R.string.botonPositivo)){ _,_ ->
+                        val intent = Intent(requireContext(), LoginActivity::class.java)
+                        startActivity(intent)
+                        this.requireActivity().finish()
+                    }.setNegativeButton(getString(R.string.botonNegativo)){ dialog,_ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            }
         }
-
-
     }
 
     private fun load(){
@@ -85,7 +117,7 @@ class DetalleProductoFragment : Fragment() {
         binding.btOrder.visibility = View.VISIBLE
 
         lifecycleScope.launch {
-            productoId?.let { id ->
+            producto.id.let { id ->
                 val call: Call<DetalleProductoDto> = repository.getDetalleProductoApiary(id.toString())
                 call.enqueue(object : Callback<DetalleProductoDto> {
                     override fun onResponse(
@@ -105,8 +137,6 @@ class DetalleProductoFragment : Fragment() {
                                 .load(response.body()?.imageURL)
                                 .error(R.drawable.ic_image)
                                 .into(ivProduct)*/
-
-
 
                             tvDescription.text = response.body()?.description
                             var category = ""
@@ -161,10 +191,10 @@ class DetalleProductoFragment : Fragment() {
     }
     companion object {
         @JvmStatic
-        fun newInstance(productoId: Long ) = DetalleProductoFragment().apply {
+        fun newInstance(producto: ProductoDto ) = DetalleProductoFragment(producto = producto)/*.apply {
             arguments = Bundle().apply {
                 putLong(PRODUCTO_ID, productoId)
             }
-        }
+        }*/
     }
 }

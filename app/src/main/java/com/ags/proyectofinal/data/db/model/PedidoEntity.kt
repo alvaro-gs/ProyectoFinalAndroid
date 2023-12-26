@@ -12,7 +12,7 @@ data class PedidoEntity(
     val id: Long = 0,
 
     @ColumnInfo(name = "pedido_producto_id")
-    var productoId: Long = 0,
+    var productoId: Long ,
 
     @ColumnInfo(name = "pedido_user_id")
     var userId: String = "",
@@ -24,7 +24,7 @@ data class PedidoEntity(
     var imageURL: String,
 
     @ColumnInfo(name = "pedido_status")
-    var status: Short = 0,
+    var status: Short ,
 
     @ColumnInfo(name = "pedido_street")
     var street: String,
@@ -42,7 +42,10 @@ data class PedidoEntity(
     var remainingPayment: Double,
 
     @ColumnInfo(name = "pedido_presentation")
-    var presentation: Int
+    var presentation: Int,
+
+    @ColumnInfo(name = "observaciones_admin")
+    var observations: String = ""
 
 )
 

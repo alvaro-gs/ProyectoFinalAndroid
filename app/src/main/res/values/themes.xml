@@ -1,11 +1,26 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.ProyectoFinal" parent="Theme.Material3.DayNight">
+    <style name="Base.Theme.ProyectoFinal" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/azulFondo</item>
+        <item name="colorSecondary">@color/azulFondo</item>
+        <item name="android:statusBarColor">@color/azulFondo</item>
+
     </style>
 
     <style name="Theme.ProyectoFinal" parent="Base.Theme.ProyectoFinal" />
+
+    <style name="BottomAppBarStyle" parent="Widget.MaterialComponents.BottomAppBar.Colored">
+        <item name="background">?attr/colorPrimary</item>
+    </style>
+
+    <style name="BottomNavigationStyle">
+        <item name="android:background">@color/azulFondo</item>
+        <item name="itemIconTint">@color/bnv_tab_item_foreground</item>
+        <item name="itemTextColor">@color/bnv_tab_item_foreground</item>
+        <item name="itemBackground">@color/azulFondo</item>
+    </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>

@@ -3,4 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="morado1">#BB36F4</color>
+    <color name="azulFondo">#024059</color>
+    <color name="rojo">#F22222</color>
+    <color name="naranja">#F27F1B</color>
+    <color name="narnajaClaro">#F2A35E</color>
+    <color name="azul">#4A44F2</color>
+
 </resources>

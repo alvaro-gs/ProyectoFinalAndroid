@@ -86,14 +86,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
             firebaseAuth.createUserWithEmailAndPassword(email, contrasenia).addOnCompleteListener { authResult->
                 if(authResult.isSuccessful){
                     binding.progressBar.visibility = View.GONE
-                    //Enviar correo para verificación de email
-                    var user_fb = firebaseAuth.currentUser
+                    //Enviar correo para verificación de email, comentado porque causa errores a veces
+                    /*var user_fb = firebaseAuth.currentUser
                     user_fb?.sendEmailVerification()?.addOnSuccessListener {
                         Toast.makeText(requireContext(), getString(R.string.correoEnviado), Toast.LENGTH_SHORT).show()
                     }?.addOnFailureListener {
                         Toast.makeText(requireContext(), getString(R.string.correoNoEnviado), Toast.LENGTH_SHORT).show()
                     }
-
+                    */
                     Toast.makeText(requireContext(), getString(R.string.usuarioCreado), Toast.LENGTH_SHORT).show()
 
                     val intent = Intent(requireContext(), MainActivity::class.java)

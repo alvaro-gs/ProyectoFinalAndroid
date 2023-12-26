@@ -4,6 +4,7 @@
     <string name="inicio">Catálogo</string>
     <string name="pedidos">Pedidos</string>
     <string name="usuario">Usuario</string>
+    <string name="menu">Menú</string>
     <string name="bienvenidaInicio">Hola %s, estos son los productos que tenemos para ofrecerte: </string>
     <string name="bienvenidaInicioAdmin">Hola %s (administrador), estos son los productos que los clientes pueden ver: </string>
     <string name="bienvenidaInicioInvitado">Hola, estos son los productos que tenemos para ofrecerte: </string>
@@ -38,7 +39,7 @@
     <string name="correoNoEnviado">No se pudo enviar el correo de verificación</string>
     <string name="usuarioCreado">Usuario creado</string>
     <string name="restablecerContraseña">Restablecer contraseña</string>
-    <string name="correoEnlaceRestablecerContraseña">Ingrese su correo para recibir el enlace para restablecer</string>
+    <string name="correoEnlaceRestablecerContraseña">Ingrese su correo para recibir el enlace para restablecer la contraseña</string>
     <string name="enviar">Enviar</string>
     <string name="enlaceRestablecerContraseñaExitoso">El enlace para restablecer la contraseña ha sido enviado a su correo</string>
     <string name="enlaceRestablecerContraseñaFallido">El enlace no se ha podido enviar: %s</string>
@@ -63,14 +64,15 @@
     <string name="detallePedido">Detalle del pedido</string>
     <string name="detalleEntrega">Detalle de entrega</string>
     <string name="listaPedidos">Mis pedidos</string>
-    <string name="sucursal">En sucursal</string>
+    <string name="sucursal">Sucursal</string>
     <string name="domicilio">A domicilio</string>
     <string name="pago">Método de pago</string>
-    <string name="totalPago">Total a pagar: </string>
-    <string name="entrega">Entrega</string>
+    <string name="productoSeleccionado">Producto seleccionado</string>
+    <string name="totalPago">Total a pagar: %s </string>
+    <string name="entrega">Por favor, seleccione el modo de entrega:</string>
     <string name="entregaEn">Entrega en: </string>
     <string name="producto">Producto</string>
-    <string name="listaProductos">Lista de productos disponibles</string>
+    <string name="listaProductos">Productos disponibles</string>
     <string name="pedidoTexto">Pedido </string>
     <string name="domicilioEntrega">Por favor, ingrese los datos del domicilio de entrega</string>
     <string name="domicilioEntregaEditar">Puedes editar los datos que proporcionaste anteriormente</string>
@@ -94,9 +96,16 @@
     <string name="noRegistros">Sin registros por mostrar</string>
     <string name="codigoPostal">Codigo postal: </string>
     <string name="recargar">Recargar</string>
+    <string name="editarPedido">Editar pedido</string>
     <string name="eliminarPedido">Eliminar pedido</string>
+    <string name="cancelarPedido">Cancelar pedido</string>
     <string name="mensajeEliminarPedido">¿Está seguro de querer eliminar este pedido?</string>
+    <string name="mensajeCancelarPedido">¿Está seguro de querer cancelar este pedido?</string>
+    <string name="mensajeCancelarPedidoSinReembolso">¿Está seguro de querer cancelar este pedido? No se le reembolsará el anticipo</string>
+    <string name="noEditarPedido">No es posible editar este pedido porque ya se encuentra en proceso de elaboración</string>
+    <string name="noCancelarPedido">Los pedidos cancelados ya no se pueden modificar</string>
     <string name="eliminacionExitosa">Pedido eliminado exitosamente</string>
+    <string name="cancelacionExitosa">Pedido cancelado exitosamente</string>
     <string name="eliminacionFallida">Ocurrió un error, favor de reintentar</string>
     <string name="eligePresentacion">Elige una presentación</string>
     <string name="eligeDireccion">Elige cómo quieres recibir el pedido</string>
@@ -108,7 +117,7 @@
 
     <string name="detalleProducto">Detalle del producto</string>
     <string name="tipo">Tipo de producto</string>
-    <string name="presentaciones">Presentaciones y precio del producto</string>
+    <string name="presentaciones">Presentaciones disponibles</string>
     <string name="pres">Presentaciones del producto</string>
     <string name="ordenar">Ordenar</string>
     <string name="descripción">Descripción</string>
@@ -119,11 +128,15 @@
     <string name="categoria4">Galletas</string>
     <string name="categoria5">Otros</string>
     <string name="errorConexion">Error de conexión</string>
+    <string name="usuarioBanner">Usuario</string>
+    <string name="tituloCatalogo">Productos disponibles</string>
+    <string name="invitado">Invitado</string>
     <!-- Admin -->
-    <string name="detallePedidoAdmin">Detalle del pedido : %s (administrador) </string>
+    <string name="listaPedidosAdmin">Pedidos registrados</string>
+    <string name="editarPedidoAdmin">Editar pedido : Administrador  </string>
     <string name="modificarEstatus">Modificar estatus</string>
-    <string name="productoAdmin">Producto : %s</string>
-    <string name="guardarCambios">Guardar cambios</string>
+    <string name="productoTitulo">Producto : %s</string>
+    <string name="guardarCambios">Guardar</string>
     <string name="observacionesPedido">Observaciones para el cliente</string>
     <string name="errorGenerico">Ocurrio un error, favor de reintentar</string>
     <string name="guardarCambiosAlerta">¿Los datos son correctos?</string>

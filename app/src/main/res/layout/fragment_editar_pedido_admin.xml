@@ -7,14 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".ui.EditarPedidoAdminFragment">
 
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/azulFondo"
+        android:gravity="center_horizontal"
+        android:paddingVertical="10dp"
+        android:text="Titulo"
+        style="@style/TitleText"
+        app:layout_constraintTop_toTopOf="parent" />
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
         app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,33 +32,21 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tvTitulo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/morado1"
-                android:gravity="center_horizontal"
-                android:paddingVertical="10dp"
-                android:text="@string/detallePedido"
-                android:textColor="@android:color/white"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
                 android:id="@+id/tvOrderTitle"
-                style="@style/NormalText"
+                style="@style/SubTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="@string/productoAdmin"
+                android:layout_marginTop="20dp"
+                android:text="@string/productoTitulo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvTitulo" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/ivProduct"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:src="@drawable/ic_image"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,10 +54,10 @@
 
             <TextView
                 android:id="@+id/tvDetailTitle"
-                style="@style/NormalText"
+                style="@style/SubTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/detalleEntrega"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -72,6 +70,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bordes_tv"
                 android:text="TextoDetalle"
+                style="@style/NormalText"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="@id/ivProduct"
                 app:layout_constraintStart_toStartOf="@id/ivProduct"
@@ -79,10 +78,10 @@
 
             <TextView
                 android:id="@+id/tvEstatusTitle"
-                style="@style/NormalText"
+                style="@style/SubTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/modificarEstatus"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -100,10 +99,10 @@
 
             <TextView
                 android:id="@+id/tvPayTitle"
-                style="@style/NormalText"
+                style="@style/SubTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/pagoRestante"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -111,6 +110,7 @@
 
             <TextView
                 android:id="@+id/tvPay"
+                style="@style/NormalText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -123,13 +123,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilNotes"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-
-                android:hint="@string/observaciones"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="50dp"
-                android:layout_marginStart="50dp"
+                android:hint="@string/observaciones"
                 app:boxCornerRadiusBottomEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
@@ -143,16 +143,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <Button
                 android:id="@+id/btSave"
+                style="@style/ButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="@string/regresar"
+                android:layout_marginTop="20dp"
+                android:text="@string/guardarCambios"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tilNotes" />

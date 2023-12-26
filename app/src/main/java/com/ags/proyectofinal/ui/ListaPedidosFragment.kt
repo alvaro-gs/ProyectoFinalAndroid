@@ -1,6 +1,5 @@
 package com.ags.proyectofinal.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
@@ -45,6 +44,11 @@ class ListaPedidosFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (user?.uid == "AMufvA6zA4ZaAOWrnegGS5qyecI3"){
+            binding.tvTitulo.text = getString(R.string.listaPedidosAdmin)
+        }else{
+            binding.tvTitulo.text = getString(R.string.listaPedidos)
+        }
 
         repository = (activity?.application as ProyectoFinalApp).repository
 
@@ -69,7 +73,7 @@ class ListaPedidosFragment : Fragment() {
 
         binding.btNew.setOnClickListener{
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fgContainerView, NuevoPedidoFragment.newInstance(tipo = 'N', pedidoId = -1))
+                .replace(R.id.fgContainerView, NuevoPedidoFragment.newInstance(pedido = null,/*tipo = 'N', pedidoId = -1*/))
                 .addToBackStack("NuevoPedidoFragment")
                 .commit()
         }
@@ -86,38 +90,130 @@ class ListaPedidosFragment : Fragment() {
                 if (user?.uid == "AMufvA6zA4ZaAOWrnegGS5qyecI3"){
                     parentFragmentManager.beginTransaction()
                         .replace(R.id.fgContainerView, EditarPedidoAdminFragment.newInstance(pedido = pedido))
-                        .addToBackStack("DetallePedidoFragment")
+                        .addToBackStack("EditarPedidoAdminFragment")
                         .commit()
                 }
                 else{
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fgContainerView, NuevoPedidoFragment.newInstance(tipo = 'E', pedidoId = pedido.id))
-                        .addToBackStack("EditarPedidoFragment")
-                        .commit()
+                    var status = pedido.status
+                    if (status == 0.toShort()){
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fgContainerView, NuevoPedidoFragment.newInstance(pedido = pedido)/*,tipo = 'E', pedidoId = pedido.id)*/)
+                            .addToBackStack("EditarPedidoFragment")
+                            .commit()
+                    } else {
+                        var message = ""
+                        if (status == 5.toShort()){
+                            message = getString(R.string.noCancelarPedido)
+                        }
+                        else{
+                            message = getString(R.string.noEditarPedido)
+                        }
+
+                        AlertDialog.Builder(requireContext())
+                            .setTitle(getString(R.string.editarPedido))
+                            .setMessage(message)
+                            .setPositiveButton(getString(R.string.botonPositivo)){ dialog,_ ->
+                               dialog.dismiss()
+                            }
+                            .create()
+                            .show()
+
+                    }
+
                 }
             }
             "Delete" -> {
-                AlertDialog.Builder(requireContext())
-                    .setTitle(getString(R.string.eliminarPedido))
-                    .setMessage(getString(R.string.mensajeEliminarPedido))
-                    .setPositiveButton(getString(R.string.botonPositivo)){ _,_ ->
-                        try{
-                            lifecycleScope.launch {
-                                repository.deletePedido(pedido)
-                                updateUI()
-                                Toast.makeText(requireContext(), getString(R.string.eliminacionExitosa), Toast.LENGTH_SHORT).show()
+                if (user?.uid == "AMufvA6zA4ZaAOWrnegGS5qyecI3"){
 
+                    AlertDialog.Builder(requireContext())
+                        .setTitle(getString(R.string.eliminarPedido))
+                        .setMessage(getString(R.string.mensajeEliminarPedido))
+                        .setPositiveButton(getString(R.string.botonPositivo)){ _,_ ->
+                            try{
+                                lifecycleScope.launch {
+                                    repository.deletePedido(pedido)
+                                    updateUI()
+                                    Toast.makeText(requireContext(), getString(R.string.eliminacionExitosa), Toast.LENGTH_SHORT).show()
+
+                                }
+                            }catch (e: IOException){
+                                e.printStackTrace()
+                                Toast.makeText(requireContext(), getString(R.string.eliminacionFallida), Toast.LENGTH_SHORT).show()
                             }
-                        }catch (e: IOException){
-                            e.printStackTrace()
-                            Toast.makeText(requireContext(), getString(R.string.eliminacionFallida), Toast.LENGTH_SHORT).show()
-                        }
 
-                    }.setNegativeButton(getString(R.string.botonNegativo)){ dialog,_ ->
-                        dialog.dismiss()
+                        }.setNegativeButton(getString(R.string.botonNegativo)){ dialog,_ ->
+                            dialog.dismiss()
+                        }
+                        .create()
+                        .show()
+                }
+                else {
+                    var status = pedido.status
+                    if (status == 0.toShort()){
+                        AlertDialog.Builder(requireContext())
+                            .setTitle(getString(R.string.cancelarPedido))
+                            .setMessage(getString(R.string.mensajeCancelarPedido))
+                            .setPositiveButton(getString(R.string.botonPositivo)){ _,_ ->
+                                try{
+                                    lifecycleScope.launch {
+                                        pedido.status = 5
+                                        repository.updatePedido(pedido)
+                                        updateUI()
+                                        Toast.makeText(requireContext(), getString(R.string.cancelacionExitosa), Toast.LENGTH_SHORT).show()
+
+                                    }
+                                }catch (e: IOException){
+                                    e.printStackTrace()
+                                    Toast.makeText(requireContext(), getString(R.string.eliminacionFallida), Toast.LENGTH_SHORT).show()
+                                }
+
+                            }.setNegativeButton(getString(R.string.botonNegativo)){ dialog,_ ->
+                                dialog.dismiss()
+                            }
+                            .create()
+                            .show()
                     }
-                    .create()
-                    .show()
+                    else{
+                        var message = ""
+                        if (status == 5.toShort()){
+                            message = getString(R.string.noCancelarPedido)
+                            AlertDialog.Builder(requireContext())
+                                .setTitle(getString(R.string.cancelarPedido))
+                                .setMessage(message)
+                                .setPositiveButton(getString(R.string.botonPositivo)){ dialog,_ ->
+                                    dialog.dismiss()
+                                }
+                                .create()
+                                .show()
+
+                        }
+                        else{
+                            message = getString(R.string.mensajeCancelarPedidoSinReembolso)
+                            AlertDialog.Builder(requireContext())
+                                .setTitle(getString(R.string.cancelarPedido))
+                                .setMessage(message)
+                                .setPositiveButton(getString(R.string.botonPositivo)){ _,_ ->
+                                    try{
+                                        lifecycleScope.launch {
+                                            pedido.status = 5
+                                            repository.updatePedido(pedido)
+                                            updateUI()
+                                            Toast.makeText(requireContext(), getString(R.string.cancelacionExitosa), Toast.LENGTH_SHORT).show()
+
+                                        }
+                                    }catch (e: IOException){
+                                        e.printStackTrace()
+                                        Toast.makeText(requireContext(), getString(R.string.eliminacionFallida), Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }.setNegativeButton(getString(R.string.botonNegativo)){ dialog,_ ->
+                                    dialog.dismiss()
+                                }
+                                .create()
+                                .show()
+                        }
+                    }
+                }
             }
 
             "Detail" ->{

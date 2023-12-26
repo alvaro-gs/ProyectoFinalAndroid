@@ -9,7 +9,6 @@ import com.ags.proyectofinal.R
 import com.ags.proyectofinal.data.db.model.PedidoEntity
 import com.ags.proyectofinal.databinding.FragmentDetallePedidoBinding
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Picasso
 
 
 class DetallePedidoFragment(
@@ -67,12 +66,9 @@ class DetallePedidoFragment(
             5.toShort() -> {
                 status = getString(R.string.estatus5)
             }
-
-            6.toShort() ->{
-                status = getString(R.string.estatus5)
-            }
         }
         binding.apply {
+            tvOrderTitle.text = getString(R.string.productoTitulo,pedido.name)
             tvDetail.text = detail
             tvEstatus.text = status
             tvPay.text = pedido.remainingPayment.toString()
@@ -82,6 +78,13 @@ class DetallePedidoFragment(
             /*Picasso.get().load(pedido.imageURL)
                 .placeholder(R.drawable.ic_image)
                 .into(ivProduct)*/
+            if (pedido.observations != ""){
+                tvNotes.text = pedido.observations
+            }
+            else{
+                tvNotes.text = ""
+            }
+
 
         }
 

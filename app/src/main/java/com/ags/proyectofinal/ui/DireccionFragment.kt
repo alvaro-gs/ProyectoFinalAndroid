@@ -14,6 +14,7 @@ import com.ags.proyectofinal.application.ProyectoFinalApp
 import com.ags.proyectofinal.data.db.PedidoRepository
 import com.ags.proyectofinal.data.db.model.PedidoEntity
 import com.ags.proyectofinal.data.remote.ProductoRepository
+import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.FragmentDireccionBinding
 import com.ags.proyectofinal.util.Constants
 import com.google.firebase.auth.FirebaseAuth
@@ -22,27 +23,30 @@ import kotlinx.coroutines.launch
 import okhttp3.internal.wait
 import java.io.IOException
 
-private const val PRODUCTO_ID = "producto_id"
+/*private const val PRODUCTO_ID = "producto_id"
 private const val PRODUCTO_IMAGE_URL = "producto_image_url"
-private const val PRESENTACION = "presentacion_id"
 private const val PEDIDO_ID = "pedido_id"
+private const val TIPO = "tipo"*/
+private const val PRESENTACION = "presentacion_id"
 private const val TOTAL_PAGAR = "total_pagar"
-private const val TIPO = "tipo"
 
-class DireccionFragment : Fragment() {
+class DireccionFragment(
+    private var pedido : PedidoEntity?= null,
+    private var producto: ProductoDto
+) : Fragment() {
 
     private var _binding: FragmentDireccionBinding?= null
     private val binding get() = _binding!!
 
-    private var pedido : PedidoEntity?= null
 
-    private var pedidoId: Long = -1
+
+    /*private var pedidoId: Long = -1
 
     private var tipo: Char = '_'
 
     private var productoId: Long = -1
 
-    private var productoImageURL: String = ""
+    private var productoImageURL: String = ""*/
 
     private var presentacion: Int = -1
 
@@ -59,10 +63,10 @@ class DireccionFragment : Fragment() {
         super.onCreate(savedInstanceState)
         repository = (requireContext().applicationContext as ProyectoFinalApp).repository
         arguments?.let {
-            tipo = it.getChar(TIPO,'_')
-            pedidoId = it.getLong(PEDIDO_ID,-1)
-            productoId = it.getLong(PRODUCTO_ID,-1)
-            productoImageURL = it.getString(PRODUCTO_IMAGE_URL,"")
+            //tipo = it.getChar(TIPO,'_')
+            //pedidoId = it.getLong(PEDIDO_ID,-1)
+            //productoId = it.getLong(PRODUCTO_ID,-1)
+            //productoImageURL = it.getString(PRODUCTO_IMAGE_URL,"")
             presentacion = it.getInt(PRESENTACION,-1)
             totalPagar = it.getDouble(TOTAL_PAGAR,0.0)
         }
@@ -77,46 +81,34 @@ class DireccionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Toast.makeText(requireContext(), "a", Toast.LENGTH_SHORT).show()
-
-        lifecycleScope.launch {
-            pedido = repository.getPedidoById(pedidoId)
-            binding.apply {
-                pbLoading.visibility = View.GONE
-                if (tipo != 'N') {
-                    if (pedido!!.postalCode == -1) {
-                        rbSucursal.isChecked = true
-                        tvAdress.visibility = View.GONE
-
-                        etStreet.visibility = View.GONE
-
-                        etSuburb.visibility = View.GONE
-
-                        etPostalCode.visibility = View.GONE
-
-                        etNotes.visibility = View.GONE
-
-                    } else {
-                        rbDomicilio.isChecked = true
-                        etStreet.setText(pedido!!.street)
-                        etSuburb.setText(pedido!!.suburb)
-                        etPostalCode.setText(pedido!!.postalCode.toString())
-                        etNotes.setText(pedido!!.notes)
-                    }
+        binding.apply {
+            pbLoading.visibility = View.GONE
+            if (pedido != null) {
+                if (pedido!!.postalCode == -1) {
+                    rbSucursal.isChecked = true
+                    tvAdress.visibility = View.GONE
+                    etStreet.visibility = View.GONE
+                    etSuburb.visibility = View.GONE
+                    etPostalCode.visibility = View.GONE
+                    etNotes.visibility = View.GONE
 
                 } else {
-                    tvAdress.visibility = View.GONE
+                    rbDomicilio.isChecked = true
+                    etStreet.setText(pedido!!.street)
+                    etSuburb.setText(pedido!!.suburb)
+                    etPostalCode.setText(pedido!!.postalCode.toString())
+                    etNotes.setText(pedido!!.notes)
+                }
 
-                    etStreet.visibility = View.GONE
-
-                    etSuburb.visibility = View.GONE
-
-                    etPostalCode.visibility = View.GONE
-
-                    etNotes.visibility = View.GONE
+            } else {
+                tvAdress.visibility = View.GONE
+                etStreet.visibility = View.GONE
+                etSuburb.visibility = View.GONE
+                etPostalCode.visibility = View.GONE
+                etNotes.visibility = View.GONE
                 }
             }
-        }
+
 
 
 
@@ -157,7 +149,7 @@ class DireccionFragment : Fragment() {
                         etPostalCode.visibility = View.VISIBLE
 
                         etNotes.visibility = View.VISIBLE
-                        if (tipo != 'N') {
+                        if (pedido != null) {
                             if (pedido!!.postalCode != -1) {
                                 binding.rbDomicilio.isChecked = true
                                 binding.etStreet.setText(pedido!!.street)
@@ -174,7 +166,9 @@ class DireccionFragment : Fragment() {
 
             btFinish.setOnClickListener {
                 if (validateFields()){
-                    var name = getString(R.string.pedidoTexto) + pedidoId.toString()
+                    var name = producto.name
+                    var productoId = producto.id
+                    var imageURL = producto.imageURL
                     var status: Short = 0
                     var street = ""
                     var suburb = ""
@@ -196,15 +190,15 @@ class DireccionFragment : Fragment() {
 
                     try{
                         lifecycleScope.launch {
-                            if (tipo == 'N') {
-                                var pedidoNuevo = PedidoEntity(productoId = productoId, userId = userId, name = name, imageURL = productoImageURL, status = status, street = street, suburb = suburb, postalCode = postalCode , notes = notes, presentation = presentacion, remainingPayment = remainingPayment)
+                            if (pedido == null) {
+                                var pedidoNuevo = PedidoEntity(productoId = productoId!!, userId = userId, name = name!!, imageURL = imageURL!!, status = status, street = street, suburb = suburb, postalCode = postalCode , notes = notes, presentation = presentacion, remainingPayment = remainingPayment)
                                 repository.insertPedido(pedidoNuevo)
                             }
                             else{
                                 pedido!!.apply {
-                                    this.productoId = productoId
-                                    this.name = name
-                                    this.imageURL = productoImageURL
+                                    this.productoId = productoId!!
+                                    this.name = name!!
+                                    this.imageURL = imageURL!!
                                     this.status = status
                                     this.street = street
                                     this.suburb = suburb
@@ -284,15 +278,15 @@ class DireccionFragment : Fragment() {
 
     companion object {
 
-        fun newInstance(tipo:Char,productoId:Long,productoImageURL:String,presentacion:Int,totalPagar: Double,pedidoId: Long) =
-            DireccionFragment().apply {
+        fun newInstance(pedido: PedidoEntity?,producto: ProductoDto,presentacion:Int,totalPagar: Double) =
+            DireccionFragment(pedido = pedido, producto = producto).apply {
                 arguments = Bundle().apply {
-                    putChar(TIPO,tipo)
-                    putLong(PRODUCTO_ID, productoId)
-                    putString(PRODUCTO_IMAGE_URL,productoImageURL)
+                    //putChar(TIPO,tipo)
+                    //putLong(PRODUCTO_ID, productoId)
+                    //putString(PRODUCTO_IMAGE_URL,productoImageURL)
                     putInt(PRESENTACION,presentacion)
                     putDouble(TOTAL_PAGAR,totalPagar)
-                    putLong(PEDIDO_ID,pedidoId)
+                    //putLong(PEDIDO_ID,pedidoId)
 
                 }
             }

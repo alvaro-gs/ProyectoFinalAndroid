@@ -45,7 +45,6 @@ class EditarPedidoAdminFragment(private var pedido : PedidoEntity) : Fragment() 
         repository = (requireContext().applicationContext as ProyectoFinalApp).repository
         listaEstatus = arrayListOf("Recibido","En proceso","Entregado","Enviado","Finalizado","Cancelado")
         var detail = ""
-        var status = ""
         if(pedido.postalCode != -1){
 
             detail = getString(R.string.entregaEn) + " " + pedido.street +  getString(R.string.coma) + " " + pedido.suburb + getString(
@@ -58,6 +57,8 @@ class EditarPedidoAdminFragment(private var pedido : PedidoEntity) : Fragment() 
         }
 
         binding.apply {
+            tvTitulo.text = getString(R.string.editarPedidoAdmin)
+            tvOrderTitle.text = getString(R.string.productoTitulo,pedido.name)
             tvDetail.text = detail
             editStatus.adapter = ArrayAdapter(
                 requireContext(),
@@ -73,11 +74,15 @@ class EditarPedidoAdminFragment(private var pedido : PedidoEntity) : Fragment() 
                 .load(pedido.imageURL)
                 .into(ivProduct)
 
-
+            etNotes.setText(pedido.observations)
         }
 
 
         binding.btSave.setOnClickListener {
+            var observations = binding.etNotes.text.toString().trim()
+            if (observations.isNotEmpty()){
+                pedido.observations = observations
+            }
             pedido.status = itemSelected
             AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.guardarCambios))
@@ -122,7 +127,6 @@ class EditarPedidoAdminFragment(private var pedido : PedidoEntity) : Fragment() 
     }
     override fun onDestroy() {
         super.onDestroy()
-        Toast.makeText(requireContext(), "Dest", Toast.LENGTH_SHORT).show()
         _binding = null
     }
 

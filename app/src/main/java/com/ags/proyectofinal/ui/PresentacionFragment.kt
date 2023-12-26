@@ -16,6 +16,8 @@ import com.ags.proyectofinal.data.db.PedidoRepository
 import com.ags.proyectofinal.data.db.model.PedidoEntity
 import com.ags.proyectofinal.data.remote.ProductoRepository
 import com.ags.proyectofinal.data.remote.model.DetalleProductoDto
+import com.ags.proyectofinal.data.remote.model.Presentations
+import com.ags.proyectofinal.data.remote.model.ProductoDto
 import com.ags.proyectofinal.databinding.FragmentPresentacionBinding
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -26,21 +28,25 @@ private const val PRODUCTO_ID = "producto_id"
 private const val PRODUCTO_IMAGE_URL = "producto_image_url"
 private const val PEDIDO_ID = "pedido_id"
 private const val TIPO = "tipo"
-class PresentacionFragment : Fragment() {
+class PresentacionFragment (
+    private var producto: ProductoDto,
+    private var pedido: PedidoEntity?
+): Fragment() {
 
 
-    private var listaPresentaciones: MutableList<String> = emptyList<String>().toMutableList()
-    private var listaPrecios: MutableList<Double> = emptyList<Double>().toMutableList()
+    private var listaPresentaciones: MutableList<Presentations> = emptyList<Presentations>().toMutableList()
+    private var listaPresentacionesNombres: MutableList<String> = emptyList<String>().toMutableList()
     private var _binding: FragmentPresentacionBinding?= null
     private val binding get() = _binding!!
 
+    /*
     private var productoId: Long = -1
 
     private var productoImageURL: String = ""
 
     private var pedidoId: Long = -1
 
-    private var tipo: Char = '_'
+    private var tipo: Char = '_'*/
 
     private var itemSelected : Int = 0
 
@@ -48,7 +54,7 @@ class PresentacionFragment : Fragment() {
 
     private lateinit var productoRepository: ProductoRepository
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
@@ -58,7 +64,8 @@ class PresentacionFragment : Fragment() {
             tipo = it.getChar(TIPO,'_')
             pedidoId = it.getLong(PEDIDO_ID,-1)
         }
-    }
+    }*/
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -84,7 +91,8 @@ class PresentacionFragment : Fragment() {
                     id: Long
                 ) {
                     itemSelected = position
-                    totalPagar = listaPrecios[position]
+                    totalPagar = listaPresentaciones[itemSelected].price!!
+                    tvTotal.text = getString(R.string.totalPago,totalPagar.toString())
 
                 }
 
@@ -95,15 +103,30 @@ class PresentacionFragment : Fragment() {
             }
 
             btNext.setOnClickListener {
-                if (tipo == 'N'){
+                if (pedido == null){
                     parentFragmentManager.beginTransaction().
-                    replace(R.id.fgContainerView,DireccionFragment.newInstance(tipo = tipo, productoId = productoId ,productoImageURL = productoImageURL, presentacion = itemSelected , totalPagar = totalPagar, pedidoId=-1)).
+                    replace(R.id.fgContainerView,DireccionFragment.newInstance(
+                        producto = producto,
+                        pedido = null,
+                        presentacion = itemSelected ,
+                        totalPagar = totalPagar,
+                        /*pedidoId=-1,tipo = tipo,
+                        productoId = productoId ,
+                        productoImageURL = productoImageURL*/)).
                     addToBackStack(null).
                     commit()
                 }
                 else{
                     parentFragmentManager.beginTransaction().
-                    replace(R.id.fgContainerView,DireccionFragment.newInstance(tipo = tipo, productoId = productoId ,productoImageURL = productoImageURL, presentacion = itemSelected , totalPagar = totalPagar, pedidoId=pedidoId)).
+                    replace(R.id.fgContainerView,DireccionFragment.newInstance(
+                        producto = producto,
+                        pedido = pedido,
+                        presentacion = itemSelected ,
+                        totalPagar = totalPagar,
+                        /*pedidoId=pedidoId,
+                        tipo = tipo,
+                        productoId = productoId ,
+                        productoImageURL = productoImageURL*/)).
                     addToBackStack(null).
                     commit()
                 }
@@ -116,37 +139,47 @@ class PresentacionFragment : Fragment() {
         binding.btReload.visibility = View.GONE
         binding.pbLoading.visibility = View.VISIBLE
         binding.tvPresentations.visibility = View.GONE
+        binding.tvProduct.visibility = View.GONE
         binding.etPresentation.visibility = View.GONE
+        binding.tvTotal.visibility = View.GONE
         binding.btNext.visibility = View.GONE
 
-        Toast.makeText(requireContext(), "IDDDD3: ${productoId}", Toast.LENGTH_SHORT).show()
         lifecycleScope.launch {
 
-            productoId?.let { id ->
+            producto.id.let { id ->
                 val call: Call<DetalleProductoDto> = productoRepository.getDetalleProductoApiary(id.toString())
                 call.enqueue(object : Callback<DetalleProductoDto> {
                     override fun onResponse(
                         call: Call<DetalleProductoDto>,
                         response: Response<DetalleProductoDto>
                     ) {
+                        listaPresentaciones.clear()
+                        listaPresentacionesNombres.clear()
                         binding.pbLoading.visibility = View.GONE
                         binding.tvPresentations.visibility = View.VISIBLE
+                        binding.tvProduct.visibility = View.VISIBLE
                         binding.etPresentation.visibility = View.VISIBLE
+                        binding.tvTotal.visibility = View.VISIBLE
                         binding.btNext.visibility = View.VISIBLE
 
                         for (i in response.body()?.presentations!!.indices) {
-                            listaPresentaciones.add( getString(
+                            /*listaPresentaciones.add( getString(
                                 R.string.presentacionesConPrecio,
                                 response.body()?.presentations?.get(i)?.desc,
                                 response.body()?.presentations?.get(i)?.price.toString()
                                 )
-                            )
-                            listaPrecios.add(response.body()!!.presentations?.get(i)?.price!!)
+                            )*/
+                            listaPresentaciones.add(response.body()?.presentations?.get(i)!!)
+                            listaPresentacionesNombres.add(response.body()?.presentations?.get(i)?.desc!!)
+                            //listaPrecios.add(response.body()!!.presentations?.get(i)?.price!!)
 
                         }
                         binding.apply {
-                            etPresentation
-                            etPresentation.adapter = ArrayAdapter(requireContext(),R.layout.spinner_layout,R.id.spinnerText,listaPresentaciones)
+                            tvProduct.text = producto.name
+                            etPresentation.adapter = ArrayAdapter(requireContext(),R.layout.spinner_layout,R.id.spinnerText,listaPresentacionesNombres)
+                            itemSelected = 0
+                            totalPagar = listaPresentaciones[itemSelected].price!!
+                            tvTotal.text = getString(R.string.totalPago,totalPagar.toString())
                         }
                     }
 
@@ -156,8 +189,9 @@ class PresentacionFragment : Fragment() {
                         binding.btNext.visibility = View.VISIBLE
                         binding.pbLoading.visibility = View.GONE
                         binding.tvPresentations.visibility = View.GONE
+                        binding.tvProduct.visibility = View.GONE
                         binding.etPresentation.visibility = View.GONE
-
+                        binding.tvTotal.visibility = View.GONE
                         binding.btReload.setOnClickListener {
 
                             load()
@@ -174,7 +208,7 @@ class PresentacionFragment : Fragment() {
         _binding = null
     }
     companion object {
-        fun newInstance(tipo:Char, productoId:Long,productoImageURL: String,pedidoId: Long) = PresentacionFragment().apply {
+        fun newInstance(producto: ProductoDto,pedido: PedidoEntity?) = PresentacionFragment(producto = producto, pedido = pedido)/*.apply {
             arguments = Bundle().apply {
                 putChar(TIPO,tipo)
                 putLong(PRODUCTO_ID, productoId)
@@ -183,6 +217,6 @@ class PresentacionFragment : Fragment() {
             }
 
 
-        }
+        }*/
     }
 }

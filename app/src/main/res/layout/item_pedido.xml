@@ -9,6 +9,7 @@
         app:cardUseCompatPadding="true"
         app:cardCornerRadius="15dp"
         app:cardElevation="5dp"
+        android:backgroundTint="@color/narnajaClaro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,6 +32,7 @@
                 app:layout_constraintTop_toBottomOf="@id/btEdit"
                 app:layout_constraintEnd_toEndOf="@id/btDelete"
                 android:text="@string/estatus"
+                style="@style/SubTitleText2"
                 android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -40,6 +42,7 @@
                 app:layout_constraintStart_toEndOf="@id/ivPedido"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="20dp"
+                android:backgroundTint="@color/narnajaClaro"
                 android:src="@drawable/ic_edit"
                 android:layout_marginStart="50dp"
                 android:layout_width="wrap_content"
@@ -50,6 +53,7 @@
                 app:layout_constraintStart_toEndOf="@id/btEdit"
                 app:layout_constraintTop_toTopOf="@id/btEdit"
                 app:layout_constraintBottom_toBottomOf="@id/btEdit"
+                android:backgroundTint="@color/narnajaClaro"
                 android:src="@drawable/ic_delete"
                 android:layout_marginStart="20dp"
                 android:layout_width="wrap_content"

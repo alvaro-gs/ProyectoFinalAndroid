@@ -35,10 +35,15 @@ class ListaProductosFragment : Fragment() {
     private lateinit var firebaseAuth: FirebaseAuth
     private var user: FirebaseUser? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        print("a")
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        print("b")
         _binding = FragmentListaProductosBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -48,6 +53,7 @@ class ListaProductosFragment : Fragment() {
         firebaseAuth = FirebaseAuth.getInstance()
         user = firebaseAuth.currentUser
         repository = (requireActivity() .application as ProyectoFinalApp).productoRepository
+        print("c")
         load()
     }
 
@@ -56,7 +62,7 @@ class ListaProductosFragment : Fragment() {
         binding.btReload.visibility = View.GONE
         binding.pbLoading.visibility = View.VISIBLE
         binding.listaProductos.visibility = View.GONE
-        binding.tvTitulo.visibility = View.GONE
+        binding.tvUser.visibility = View.GONE
 
         lifecycleScope.launch {
             val call: Call<List<ProductoDto>> = repository.getCatalogoProductosApiary()
@@ -68,16 +74,12 @@ class ListaProductosFragment : Fragment() {
                 ) {
                     binding.pbLoading.visibility = View.GONE
                     binding.listaProductos.visibility = View.VISIBLE
-                    binding.tvTitulo.visibility = View.VISIBLE
+                    binding.tvUser.visibility = View.VISIBLE
                     if (user != null){
-                        if (user?.uid == "AMufvA6zA4ZaAOWrnegGS5qyecI3" ){
-                            binding.tvTitulo.text = getString(R.string.bienvenidaInicioAdmin,user?.email)
-                        }else{
-                            binding.tvTitulo.text = getString(R.string.bienvenidaInicio,user?.email)
-                        }
+                        binding.tvUser.text = user?.email
 
                     }else{
-                        binding.tvTitulo.text = getString(R.string.bienvenidaInicioInvitado)
+                        binding.tvUser.text = getString(R.string.invitado)
                     }
 
                     Log.d(Constants.LOGTAG, "Respuesta del servidor ${response.body()}")
@@ -86,13 +88,12 @@ class ListaProductosFragment : Fragment() {
                         binding.listaProductos.apply {
                             layoutManager = LinearLayoutManager(requireContext())
                             adapter = ProductoAdapter(productos){ producto ->
-                                producto.id?.let { id ->
-                                    // Conexión a los detalles
-                                    requireActivity().supportFragmentManager.beginTransaction()
-                                        .replace(R.id.fgContainerView,DetalleProductoFragment.newInstance(id))
-                                        .addToBackStack(null)
-                                        .commit()
-                                }
+                                // Conexión a los detalles
+                                requireActivity().supportFragmentManager.beginTransaction()
+                                    .replace(R.id.fgContainerView,DetalleProductoFragment.newInstance(producto))
+                                    .addToBackStack(null)
+                                    .commit()
+
                             }
                             addItemDecoration(DividerItemDecoration(requireContext(),1))
                         }
@@ -105,7 +106,7 @@ class ListaProductosFragment : Fragment() {
                     binding.tvError.visibility = View.VISIBLE
                     binding.btReload.visibility = View.VISIBLE
                     binding.listaProductos.visibility = View.GONE
-                    binding.tvTitulo.visibility = View.GONE
+                    binding.tvUser.visibility = View.GONE
                     Log.d(Constants.LOGTAG,"Error: ${t.message}")
 
                     binding.btReload.setOnClickListener {
