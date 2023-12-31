@@ -82,7 +82,7 @@ class DetallePedidoFragment(
                 tvNotes.text = pedido.observations
             }
             else{
-                tvNotes.text = ""
+                tvNotes.text = getString(R.string.sinObservaciones)
             }
 
 
